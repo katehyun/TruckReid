@@ -1,19 +1,19 @@
 ### Plot
 
 no<-1
-wimplot <- f.drawwimsignature (no)
+Downplot <- f.drawDownsignature (no)
 
 
 n1=27
 n2=1
-vdsplot <- f.drawvdssignature (n1,n2)
+Upplot <- f.drawUpsignature (n1,n2)
 
 n1=27
 n2=4
-vdsplot <- f.drawvdssignature (n1,n2)
+Upplot <- f.drawUpsignature (n1,n2)
 
 sigid <- 941357772780728
-vdsplot <- f.vdsdraw (sigid)
+Upplot <- f.Updraw (sigid)
 
 sigid <- 531357774582561
-wimplot <- f.wimdraw (sigid)
+Downplot <- f.Downdraw (sigid)

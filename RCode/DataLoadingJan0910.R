@@ -1,6 +1,6 @@
 ################ Data Input ####################
 ### SOLC Jan 0910
-setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine") 
+setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid") 
 rm(list=ls())
 
 LC.Jan09ML3Header1=read.table("./RawData/LCJan/ML30109/84_IST0001297_CA130109212114_fileIdx.txt",  fill=T)
@@ -48,11 +48,6 @@ SO.Jan10ML4sig1=read.table("./RawData/SOJan/ML40110/IST0001030_CA130110080000.tx
 SO.Jan10ML4sig2=read.table("./RawData/SOJan/ML40110/IST0001030_CA130110192108.txt", fill=T)
 
 
-
-save.image("./RawData/SOLCRawJan0910")
-
-rm(list=ls())
-load("./RawData/SOLCRawJan0910")
 
 ### col name for sig file
 colnames(LC.Jan09ML3sig1) <- c("id", "v2", "v3","v4","v5","v6")
@@ -112,7 +107,7 @@ for (i in 1:nrow(LC.Jan09ML3Header1)){
   LC.Jan09ML3Header1[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(LC.Jan09ML3Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan09ML3Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 LC.Jan09ML3Header2[,length(LC.Jan09ML3Header2)+1]<- 1000*(uctJan09 + LC.Jan09ML3Header2[,length(LC.Jan09ML3Header2)])
@@ -125,7 +120,7 @@ for (i in 1:nrow(LC.Jan09ML3Header2)){
   LC.Jan09ML3Header2[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(LC.Jan09ML3Header2) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan09ML3Header2) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 # LC Jan09 ML4 - header 1 & 2
@@ -139,7 +134,7 @@ len <- length (LC.Jan09ML4Header1)+1
 for (i in 1:nrow(LC.Jan09ML4Header1)){
   LC.Jan09ML4Header1[i,len] <- paste (x[i],y[i], sep="")
 }
-colnames(LC.Jan09ML4Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan09ML4Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 LC.Jan09ML4Header2[,length(LC.Jan09ML4Header2)+1]<- 1000*(uctJan09 + LC.Jan09ML4Header2[,length(LC.Jan09ML4Header2)])
@@ -151,7 +146,7 @@ len <- length (LC.Jan09ML4Header2)+1
 for (i in 1:nrow(LC.Jan09ML4Header2)){
   LC.Jan09ML4Header2[i,len] <- paste (x[i],y[i], sep="")
 }
-colnames(LC.Jan09ML4Header2) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan09ML4Header2) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 # LC Jan10 ML3 - header 1 & 2 & 3 & 4
@@ -166,7 +161,7 @@ for (i in 1:nrow(LC.Jan10ML3Header1)){
   LC.Jan10ML3Header1[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(LC.Jan10ML3Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan10ML3Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 LC.Jan10ML3Header2[,length(LC.Jan10ML3Header2)+1]<- 1000*(uctJan10 + LC.Jan10ML3Header2[,length(LC.Jan10ML3Header2)])
@@ -179,7 +174,7 @@ for (i in 1:nrow(LC.Jan10ML3Header2)){
   LC.Jan10ML3Header2[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(LC.Jan10ML3Header2) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan10ML3Header2) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 LC.Jan10ML3Header3[,length(LC.Jan10ML3Header3)+1]<- 1000*(uctJan10 + LC.Jan10ML3Header3[,length(LC.Jan10ML3Header3)])
 
@@ -191,7 +186,7 @@ for (i in 1:nrow(LC.Jan10ML3Header3)){
   LC.Jan10ML3Header3[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(LC.Jan10ML3Header3) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan10ML3Header3) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 LC.Jan10ML3Header4[,length(LC.Jan10ML3Header4)+1]<- 1000*(uctJan10 + LC.Jan10ML3Header4[,length(LC.Jan10ML3Header4)])
@@ -204,7 +199,7 @@ for (i in 1:nrow(LC.Jan10ML3Header4)){
   LC.Jan10ML3Header4[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(LC.Jan10ML3Header4) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan10ML3Header4) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 
@@ -219,7 +214,7 @@ for (i in 1:nrow(LC.Jan10ML4Header1)){
   LC.Jan10ML4Header1[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(LC.Jan10ML4Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan10ML4Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 LC.Jan10ML4Header2[,length(LC.Jan10ML4Header2)+1]<- 1000*(uctJan10 + LC.Jan10ML4Header2[,length(LC.Jan10ML4Header2)])
@@ -232,7 +227,7 @@ for (i in 1:nrow(LC.Jan10ML4Header2)){
   LC.Jan10ML4Header2[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(LC.Jan10ML4Header2) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan10ML4Header2) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 LC.Jan10ML4Header3[,length(LC.Jan10ML4Header3)+1]<- 1000*(uctJan10 + LC.Jan10ML4Header3[,length(LC.Jan10ML4Header3)])
 
@@ -244,7 +239,7 @@ for (i in 1:nrow(LC.Jan10ML4Header3)){
   LC.Jan10ML4Header3[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(LC.Jan10ML4Header3) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan10ML4Header3) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 LC.Jan10ML4Header4[,length(LC.Jan10ML4Header4)+1]<- 1000*(uctJan10 + LC.Jan10ML4Header4[,length(LC.Jan10ML4Header4)])
@@ -257,7 +252,7 @@ for (i in 1:nrow(LC.Jan10ML4Header4)){
   LC.Jan10ML4Header4[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(LC.Jan10ML4Header4) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan10ML4Header4) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 
@@ -273,7 +268,7 @@ for (i in 1:nrow(SO.Jan09ML3Header1)){
   SO.Jan09ML3Header1[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(SO.Jan09ML3Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(SO.Jan09ML3Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 # SO Jan10 ML3 - header 1 & 2
@@ -288,7 +283,7 @@ for (i in 1:nrow(SO.Jan10ML3Header1)){
   SO.Jan10ML3Header1[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(SO.Jan10ML3Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(SO.Jan10ML3Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 SO.Jan10ML3Header2[,length(SO.Jan10ML3Header2)+1]<- 1000*(uctJan10 + SO.Jan10ML3Header2[,length(SO.Jan10ML3Header2)])
 
@@ -300,7 +295,7 @@ for (i in 1:nrow(SO.Jan10ML3Header2)){
   SO.Jan10ML3Header2[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(SO.Jan10ML3Header2) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(SO.Jan10ML3Header2) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 # SO Jan09 ML4 - header 1 
 
@@ -314,7 +309,7 @@ for (i in 1:nrow(SO.Jan09ML4Header1)){
   SO.Jan09ML4Header1[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(SO.Jan09ML4Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(SO.Jan09ML4Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 # SO Jan10 ML4 - header 1 & 2
@@ -329,7 +324,7 @@ for (i in 1:nrow(SO.Jan10ML4Header1)){
   SO.Jan10ML4Header1[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(SO.Jan10ML4Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(SO.Jan10ML4Header1) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 SO.Jan10ML4Header2[,length(SO.Jan10ML4Header2)+1]<- 1000*(uctJan10 + SO.Jan10ML4Header2[,length(SO.Jan10ML4Header2)])
 
@@ -341,74 +336,74 @@ for (i in 1:nrow(SO.Jan10ML4Header2)){
   SO.Jan10ML4Header2[i,len] <- paste (x[i],y[i], sep="")
 }
 
-colnames(SO.Jan10ML4Header2) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(SO.Jan10ML4Header2) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 
 ### Add veh id in SIG file
 #LC
-LC.Jan09ML3sig1["wimsigid"] <- NA
-LC.Jan09ML3sig2["wimsigid"] <- NA
-LC.Jan10ML3sig1["wimsigid"] <- NA
-LC.Jan10ML3sig2["wimsigid"] <- NA
-LC.Jan10ML3sig3["wimsigid"] <- NA
-LC.Jan10ML3sig4["wimsigid"] <- NA
+LC.Jan09ML3sig1["sigid"] <- NA
+LC.Jan09ML3sig2["sigid"] <- NA
+LC.Jan10ML3sig1["sigid"] <- NA
+LC.Jan10ML3sig2["sigid"] <- NA
+LC.Jan10ML3sig3["sigid"] <- NA
+LC.Jan10ML3sig4["sigid"] <- NA
 
-LC.Jan09ML4sig1["wimsigid"] <- NA
-LC.Jan09ML4sig2["wimsigid"] <- NA
-LC.Jan10ML4sig1["wimsigid"] <- NA
-LC.Jan10ML4sig2["wimsigid"] <- NA
-LC.Jan10ML4sig3["wimsigid"] <- NA
-LC.Jan10ML4sig4["wimsigid"] <- NA
+LC.Jan09ML4sig1["sigid"] <- NA
+LC.Jan09ML4sig2["sigid"] <- NA
+LC.Jan10ML4sig1["sigid"] <- NA
+LC.Jan10ML4sig2["sigid"] <- NA
+LC.Jan10ML4sig3["sigid"] <- NA
+LC.Jan10ML4sig4["sigid"] <- NA
 
 # ML3 - 0109
 system.time({
   idx1=match(LC.Jan09ML3sig1$id, LC.Jan09ML3Header1$id)
   idx2 = which(!is.na(idx1))
-  LC.Jan09ML3sig1$wimsigid[idx2] <- LC.Jan09ML3Header1$wimsigid[idx1[idx2]]
+  LC.Jan09ML3sig1$sigid[idx2] <- LC.Jan09ML3Header1$sigid[idx1[idx2]]
 })
 
 system.time({
   idx1=match(LC.Jan09ML3sig2$id, LC.Jan09ML3Header2$id)
   idx2 = which(!is.na(idx1))
-  LC.Jan09ML3sig2$wimsigid[idx2] <- LC.Jan09ML3Header2$wimsigid[idx1[idx2]]
+  LC.Jan09ML3sig2$sigid[idx2] <- LC.Jan09ML3Header2$sigid[idx1[idx2]]
 })
 
 # ML4 - 0109
 system.time({
   idx1=match(LC.Jan09ML4sig1$id, LC.Jan09ML4Header1$id)
   idx2 = which(!is.na(idx1))
-  LC.Jan09ML4sig1$wimsigid[idx2] <- LC.Jan09ML4Header1$wimsigid[idx1[idx2]]
+  LC.Jan09ML4sig1$sigid[idx2] <- LC.Jan09ML4Header1$sigid[idx1[idx2]]
 })
 
 system.time({
   idx1=match(LC.Jan09ML4sig2$id, LC.Jan09ML4Header2$id)
   idx2 = which(!is.na(idx1))
-  LC.Jan09ML4sig2$wimsigid[idx2] <- LC.Jan09ML4Header2$wimsigid[idx1[idx2]]
+  LC.Jan09ML4sig2$sigid[idx2] <- LC.Jan09ML4Header2$sigid[idx1[idx2]]
 })
 
 # ML3 - 0110
 system.time({
   idx1=match(LC.Jan10ML3sig1$id, LC.Jan10ML3Header1$id)
   idx2 = which(!is.na(idx1))
-  LC.Jan10ML3sig1$wimsigid[idx2] <- LC.Jan10ML3Header1$wimsigid[idx1[idx2]]
+  LC.Jan10ML3sig1$sigid[idx2] <- LC.Jan10ML3Header1$sigid[idx1[idx2]]
 })
 
 system.time({
   idx1=match(LC.Jan10ML3sig2$id, LC.Jan10ML3Header2$id)
   idx2 = which(!is.na(idx1))
-  LC.Jan10ML3sig2$wimsigid[idx2] <- LC.Jan10ML3Header2$wimsigid[idx1[idx2]]
+  LC.Jan10ML3sig2$sigid[idx2] <- LC.Jan10ML3Header2$sigid[idx1[idx2]]
 })
 
 system.time({
   idx1=match(LC.Jan10ML3sig3$id, LC.Jan10ML3Header3$id)
   idx2 = which(!is.na(idx1))
-  LC.Jan10ML3sig3$wimsigid[idx2] <- LC.Jan10ML3Header3$wimsigid[idx1[idx2]]
+  LC.Jan10ML3sig3$sigid[idx2] <- LC.Jan10ML3Header3$sigid[idx1[idx2]]
 })
 
 system.time({
   idx1=match(LC.Jan10ML3sig4$id, LC.Jan10ML3Header4$id)
   idx2 = which(!is.na(idx1))
-  LC.Jan10ML3sig4$wimsigid[idx2] <- LC.Jan10ML3Header4$wimsigid[idx1[idx2]]
+  LC.Jan10ML3sig4$sigid[idx2] <- LC.Jan10ML3Header4$sigid[idx1[idx2]]
 })
 
 
@@ -416,42 +411,42 @@ system.time({
 system.time({
   idx1=match(LC.Jan10ML4sig1$id, LC.Jan10ML4Header1$id)
   idx2 = which(!is.na(idx1))
-  LC.Jan10ML4sig1$wimsigid[idx2] <- LC.Jan10ML4Header1$wimsigid[idx1[idx2]]
+  LC.Jan10ML4sig1$sigid[idx2] <- LC.Jan10ML4Header1$sigid[idx1[idx2]]
 })
 
 system.time({
   idx1=match(LC.Jan10ML4sig2$id, LC.Jan10ML4Header2$id)
   idx2 = which(!is.na(idx1))
-  LC.Jan10ML4sig2$wimsigid[idx2] <- LC.Jan10ML4Header2$wimsigid[idx1[idx2]]
+  LC.Jan10ML4sig2$sigid[idx2] <- LC.Jan10ML4Header2$sigid[idx1[idx2]]
 })
 
 system.time({
   idx1=match(LC.Jan10ML4sig3$id, LC.Jan10ML4Header3$id)
   idx2 = which(!is.na(idx1))
-  LC.Jan10ML4sig3$wimsigid[idx2] <- LC.Jan10ML4Header3$wimsigid[idx1[idx2]]
+  LC.Jan10ML4sig3$sigid[idx2] <- LC.Jan10ML4Header3$sigid[idx1[idx2]]
 })
 
 system.time({
   idx1=match(LC.Jan10ML4sig4$id, LC.Jan10ML4Header4$id)
   idx2 = which(!is.na(idx1))
-  LC.Jan10ML4sig4$wimsigid[idx2] <- LC.Jan10ML4Header4$wimsigid[idx1[idx2]]
+  LC.Jan10ML4sig4$sigid[idx2] <- LC.Jan10ML4Header4$sigid[idx1[idx2]]
 })
 
 
 #SO
-SO.Jan09ML3sig1["wimsigid"] <- NA
-SO.Jan10ML3sig1["wimsigid"] <- NA
-SO.Jan10ML3sig2["wimsigid"] <- NA
+SO.Jan09ML3sig1["sigid"] <- NA
+SO.Jan10ML3sig1["sigid"] <- NA
+SO.Jan10ML3sig2["sigid"] <- NA
 
-SO.Jan09ML4sig1["wimsigid"] <- NA
-SO.Jan10ML4sig1["wimsigid"] <- NA
-SO.Jan10ML4sig2["wimsigid"] <- NA
+SO.Jan09ML4sig1["sigid"] <- NA
+SO.Jan10ML4sig1["sigid"] <- NA
+SO.Jan10ML4sig2["sigid"] <- NA
 
 # ML3 0109
 system.time({
   idx1=match(SO.Jan09ML3sig1$id, SO.Jan09ML3Header1$id)
   idx2 = which(!is.na(idx1))
-  SO.Jan09ML3sig1$wimsigid[idx2] <- SO.Jan09ML3Header1$wimsigid[idx1[idx2]]
+  SO.Jan09ML3sig1$sigid[idx2] <- SO.Jan09ML3Header1$sigid[idx1[idx2]]
 })
 
 
@@ -459,20 +454,20 @@ system.time({
 system.time({
   idx1=match(SO.Jan10ML3sig1$id, SO.Jan10ML3Header1$id)
   idx2 = which(!is.na(idx1))
-  SO.Jan10ML3sig1$wimsigid[idx2] <- SO.Jan10ML3Header1$wimsigid[idx1[idx2]]
+  SO.Jan10ML3sig1$sigid[idx2] <- SO.Jan10ML3Header1$sigid[idx1[idx2]]
 })
 
 system.time({
   idx1=match(SO.Jan10ML3sig2$id, SO.Jan10ML3Header2$id)
   idx2 = which(!is.na(idx1))
-  SO.Jan10ML3sig2$wimsigid[idx2] <- SO.Jan10ML3Header2$wimsigid[idx1[idx2]]
+  SO.Jan10ML3sig2$sigid[idx2] <- SO.Jan10ML3Header2$sigid[idx1[idx2]]
 })
 
 # ML4 0109
 system.time({
   idx1=match(SO.Jan09ML4sig1$id, SO.Jan09ML4Header1$id)
   idx2 = which(!is.na(idx1))
-  SO.Jan09ML4sig1$wimsigid[idx2] <- SO.Jan09ML4Header1$wimsigid[idx1[idx2]]
+  SO.Jan09ML4sig1$sigid[idx2] <- SO.Jan09ML4Header1$sigid[idx1[idx2]]
 })
 
 
@@ -480,13 +475,13 @@ system.time({
 system.time({
   idx1=match(SO.Jan10ML4sig1$id, SO.Jan10ML4Header1$id)
   idx2 = which(!is.na(idx1))
-  SO.Jan10ML4sig1$wimsigid[idx2] <- SO.Jan10ML4Header1$wimsigid[idx1[idx2]]
+  SO.Jan10ML4sig1$sigid[idx2] <- SO.Jan10ML4Header1$sigid[idx1[idx2]]
 })
 
 system.time({
   idx1=match(SO.Jan10ML4sig2$id, SO.Jan10ML4Header2$id)
   idx2 = which(!is.na(idx1))
-  SO.Jan10ML4sig2$wimsigid[idx2] <- SO.Jan10ML4Header2$wimsigid[idx1[idx2]]
+  SO.Jan10ML4sig2$sigid[idx2] <- SO.Jan10ML4Header2$sigid[idx1[idx2]]
 })
 
 
@@ -498,28 +493,28 @@ LC.Jan0910Header <- rbind(LC.Jan09ML3Header1, LC.Jan09ML3Header2, LC.Jan09ML4Hea
                           LC.Jan10ML3Header1, LC.Jan10ML3Header2, LC.Jan10ML3Header3, LC.Jan10ML3Header4,
                           LC.Jan10ML4Header1, LC.Jan10ML4Header2, LC.Jan10ML4Header3, LC.Jan10ML4Header4)
 LC.Jan0910Header <- LC.Jan0910Header[order(LC.Jan0910Header[,12]),] 
-colnames(LC.Jan0910Header) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(LC.Jan0910Header) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 SO.Jan0910Header <- rbind(SO.Jan09ML3Header1, SO.Jan09ML4Header1, SO.Jan10ML3Header1, SO.Jan10ML3Header2,
                           SO.Jan10ML4Header1, SO.Jan10ML4Header2)
 SO.Jan0910Header <- SO.Jan0910Header [order(SO.Jan0910Header [,12]),] 
-colnames(SO.Jan0910Header) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","wimsigid")
+colnames(SO.Jan0910Header) <- c("C", "id", "lane","v4","v5","v6","v7","v8","v9","v10","v11","utc","sigid")
 
 #SIG file
 LC.Jan0910sig <- rbind(LC.Jan09ML3sig1, LC.Jan09ML3sig2, LC.Jan09ML4sig1, LC.Jan09ML4sig2, 
                        LC.Jan10ML3sig1, LC.Jan10ML3sig2, LC.Jan10ML3sig3, LC.Jan10ML3sig4,
                        LC.Jan10ML4sig1, LC.Jan10ML4sig2, LC.Jan10ML4sig3, LC.Jan10ML4sig4)
 
-colnames(LC.Jan0910sig) <- c("id", "mag", "v3","wimsigid")
+colnames(LC.Jan0910sig) <- c("id", "mag", "v3","sigid")
 
 
 SO.Jan0910sig <-rbind(SO.Jan09ML3sig1, SO.Jan09ML4sig1, SO.Jan10ML3sig1, SO.Jan10ML3sig2,
                       SO.Jan10ML4sig1, SO.Jan10ML4sig2)
-colnames(SO.Jan0910sig) <- c("id", "mag", "v3","wimsigid")
+colnames(SO.Jan0910sig) <- c("id", "mag", "v3","sigid")
 
 # write.table(LC.Jan0910Header, "./ProcessedData/LC.Jan0910Header.txt", sep="\t")
 # write.table(SO.Jan0910Header, "./ProcessedData/SO.Jan0910Header.txt", sep="\t")
 # write.table(LC.Jan0910sig, "./ProcessedData/LC.Jan0910sig.txt", sep="\t")
 # write.table(SO.Jan0910sig, "./ProcessedData/SO.Jan0910sig.txt", sep="\t")
 # load functionbook2
-save.image("./SOLCLoadinJan0910")
+save.image("./ProcessedData/Jan0910/SOLCLoadinJan0910")

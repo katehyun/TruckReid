@@ -3,7 +3,7 @@ rm(list=ls())
 setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine") 
 load("./ProcessedData/Oct02/IrvineLoadinOct02")
 load("./ProcessedData/Mar20/IrvineLoadinMar20")
-load("./SOLCLoadinJan0910")
+load("./ProcessedData/Jan0910/SOLCLoadinJan0910")
 
 ######## check duration and filter out (When WIM data comes in, step-by-step filtering approches needed) #######
 ### Time Window ###
