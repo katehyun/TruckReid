@@ -12,6 +12,7 @@
 
 
 
+
 ### Input ready 
 num=1000 #1000
 no_round = 1000

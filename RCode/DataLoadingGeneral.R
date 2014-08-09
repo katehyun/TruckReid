@@ -30,6 +30,7 @@ matching_Mar20 = merge (siglink_Mar20, wimsiglink_Mar20, by="vehid")
 
 write.table(matching_Mar20, "./ProcessedData/matching_Mar20.txt", sep="\t")
 
+
 ### import matching id - Jan 0910 (SO-LC)
 matching_SOLC=read.table("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/RawData/LCJan/MatchingIDSOLC.txt")
 colnames(matching_SOLC) <- c("SO", "LC")

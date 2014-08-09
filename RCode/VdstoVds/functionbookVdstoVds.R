@@ -2,6 +2,7 @@
 
 
 
+
 # FUNCTION - normalization
 f.normalization <- function (insig){
   outsig <- transform (insig, newtime=insig[,1] / insig[nrow(insig),1],

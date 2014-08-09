@@ -7,6 +7,7 @@ load("./ProcessedData/Jan0910/SOLCLoadinJan0910")
 ######## check duration and filter out (When WIM data comes in, step-by-step filtering approches needed) #######
 ### Time Window ###
 
+
 buffertimewindow=60; # min (WIM-WIM case)
 bufferduration = 0.2; # 0.2 min
 buffernumpnt = 800

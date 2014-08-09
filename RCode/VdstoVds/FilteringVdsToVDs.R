@@ -5,6 +5,7 @@ load("./ProcessedData/Oct02/IrvineLoadinOct02")
 load("./ProcessedData/Mar20/IrvineLoadinMar20")
 
 
+
 ######## check duration and filter out (When WIM data comes in, step-by-step filtering approches needed) #######
 ### Time Window ###
 
