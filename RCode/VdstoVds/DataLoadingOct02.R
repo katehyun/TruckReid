@@ -12,7 +12,6 @@ Irvine.WIMOct02ML5Header=read.table("./RawData/WIMOct/ML51002/15fileIdx.txt",  f
 Irvine.WIMOct02ML5sig=read.table("./RawData/WIMOct/ML51002/IST0001070_CA121002203217.txt", fill=T)
 save.image("./RawData/IrvineRawOct02")
 
-
 ### col name for sig file
 colnames(Irvine.VDSOct02ML4sig) <- c("id", "v2", "v3","v4","v5","v6")
 colnames(Irvine.VDSOct02ML5sig) <- c("id", "v2", "v3","v4","v5","v6")

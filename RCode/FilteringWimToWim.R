@@ -1,32 +1,32 @@
 #install.packages("stringr")
-#rm(list=ls())
-#setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid") 
+rm(list=ls())
+setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid") 
 
 load("./ProcessedData/Jan0910/SOLCLoadinJan0910")
 # load functionbook2
 ######## check duration and filter out (When WIM data comes in, step-by-step filtering approches needed) #######
 ### Time Window ###
 
-
 buffertimewindow=60; # min (WIM-WIM case)
-bufferduration = 0.2; # 0.2 min
+bufferduration = 0.4; # 0.2 min
 buffernumpnt = 800
-bufferlen = 4
-bufferaspacing12 = 3
-bufferaspacing23 = 2
-bufferaspacing34 = 4
-bufferaspacing45 = 3
-buffergvw = 10
-bufferaweightl1 = 3
-bufferaweightr1 = 3
-bufferaweightl2 = 3
-bufferaweightr2 = 3
-bufferaweightl3 = 3
-bufferaweightr3 = 3
-bufferaweightl4 = 3
-bufferaweightr4 = 3
-bufferaweightl5 = 3
-bufferaweightr5 = 3
+bufferlen = 12
+bufferaspacing12 = 8
+bufferaspacing23 = 5
+bufferaspacing34 = 5
+bufferaspacing45 = 5
+buffergvw = 40
+
+# bufferaweightl1 = 3
+# bufferaweightr1 = 3
+# bufferaweightl2 = 3
+# bufferaweightr2 = 3
+# bufferaweightl3 = 3
+# bufferaweightr3 = 3
+# bufferaweightl4 = 3
+# bufferaweightr4 = 3
+# bufferaweightl5 = 3
+# bufferaweightr5 = 3
 
 
 ### input file - Jan 0910
@@ -105,17 +105,17 @@ setaspacing12 <- matrix(nrow=length(Downheader_ID), ncol=1)
 setaspacing23 <- matrix(nrow=length(Downheader_ID), ncol=1)
 setaspacing34 <- matrix(nrow=length(Downheader_ID), ncol=1)
 setaspacing45 <- matrix(nrow=length(Downheader_ID), ncol=1)
-
-setaweightl1 <- matrix(nrow=length(Downheader_ID), ncol=1)
-setaweightr1 <- matrix(nrow=length(Downheader_ID), ncol=1)
-setaweightl2 <- matrix(nrow=length(Downheader_ID), ncol=1)
-setaweightr2 <- matrix(nrow=length(Downheader_ID), ncol=1)
-setaweightl3 <- matrix(nrow=length(Downheader_ID), ncol=1)
-setaweightr3 <- matrix(nrow=length(Downheader_ID), ncol=1)
-setaweightl4 <- matrix(nrow=length(Downheader_ID), ncol=1)
-setaweightr4 <- matrix(nrow=length(Downheader_ID), ncol=1)
-setaweightl5 <- matrix(nrow=length(Downheader_ID), ncol=1)
-setaweightr5 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# 
+# setaweightl1 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# setaweightr1 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# setaweightl2 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# setaweightr2 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# setaweightl3 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# setaweightr3 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# setaweightl4 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# setaweightr4 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# setaweightl5 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# setaweightr5 <- matrix(nrow=length(Downheader_ID), ncol=1)
 
 
 lb <- matrix(nrow=length(Downheader_ID), ncol=1)
@@ -136,27 +136,27 @@ la34 <- matrix(nrow=length(Downheader_ID), ncol=1)
 ua34 <- matrix(nrow=length(Downheader_ID), ncol=1)
 la45 <- matrix(nrow=length(Downheader_ID), ncol=1)
 ua45 <- matrix(nrow=length(Downheader_ID), ncol=1)
-
-lwl1 <- matrix(nrow=length(Downheader_ID), ncol=1)
-uwl1 <- matrix(nrow=length(Downheader_ID), ncol=1)
-lwr1 <- matrix(nrow=length(Downheader_ID), ncol=1)
-uwr1 <- matrix(nrow=length(Downheader_ID), ncol=1)
-lwl2 <- matrix(nrow=length(Downheader_ID), ncol=1)
-uwl2 <- matrix(nrow=length(Downheader_ID), ncol=1)
-lwr2 <- matrix(nrow=length(Downheader_ID), ncol=1)
-uwr2 <- matrix(nrow=length(Downheader_ID), ncol=1)
-lwl3 <- matrix(nrow=length(Downheader_ID), ncol=1)
-uwl3 <- matrix(nrow=length(Downheader_ID), ncol=1)
-lwr3 <- matrix(nrow=length(Downheader_ID), ncol=1)
-uwr3 <- matrix(nrow=length(Downheader_ID), ncol=1)
-lwl4 <- matrix(nrow=length(Downheader_ID), ncol=1)
-uwl4 <- matrix(nrow=length(Downheader_ID), ncol=1)
-lwr4 <- matrix(nrow=length(Downheader_ID), ncol=1)
-uwr4 <- matrix(nrow=length(Downheader_ID), ncol=1)
-lwl5 <- matrix(nrow=length(Downheader_ID), ncol=1)
-uwl5 <- matrix(nrow=length(Downheader_ID), ncol=1)
-lwr5 <- matrix(nrow=length(Downheader_ID), ncol=1)
-uwr5 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# 
+# lwl1 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# uwl1 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# lwr1 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# uwr1 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# lwl2 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# uwl2 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# lwr2 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# uwr2 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# lwl3 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# uwl3 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# lwr3 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# uwr3 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# lwl4 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# uwl4 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# lwr4 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# uwr4 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# lwl5 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# uwl5 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# lwr5 <- matrix(nrow=length(Downheader_ID), ncol=1)
+# uwr5 <- matrix(nrow=length(Downheader_ID), ncol=1)
 
 
 for (j in 1: length(Downheader_ID)){
@@ -203,40 +203,41 @@ for (j in 1: length(Downheader_ID)){
   ua45[j] <- setaspacing45[j] + bufferaspacing45  
 }
 
-for (j in 1: length(Downheader_ID)){
-  setaweightl1[j] <- as.numeric(Downheader_new[j,21])
-  setaweightr1[j] <- as.numeric(Downheader_new[j,22])
-  setaweightl2[j] <- as.numeric(Downheader_new[j,23])
-  setaweightr2[j] <- as.numeric(Downheader_new[j,24])
-  setaweightl3[j] <- as.numeric(Downheader_new[j,25])
-  setaweightr3[j] <- as.numeric(Downheader_new[j,26])
-  setaweightl4[j] <- as.numeric(Downheader_new[j,27])
-  setaweightr4[j] <- as.numeric(Downheader_new[j,28])
-  setaweightl5[j] <- as.numeric(Downheader_new[j,29])
-  setaweightr5[j] <- as.numeric(Downheader_new[j,30])
-  lwl1[j] <- setaweightl1[j] - bufferaweightl1 
-  uwl1[j] <- setaweightl1[j] + bufferaweightl1
-  lwl2[j] <- setaweightl2[j] - bufferaweightl2 
-  uwl2[j] <- setaweightl2[j] + bufferaweightl2
-  lwl3[j] <- setaweightl3[j] - bufferaweightl3 
-  uwl3[j] <- setaweightl3[j] + bufferaweightl3
-  lwl4[j] <- setaweightl4[j] - bufferaweightl4 
-  uwl4[j] <- setaweightl4[j] + bufferaweightl4
-  lwl5[j] <- setaweightl5[j] - bufferaweightl5 
-  uwl5[j] <- setaweightl5[j] + bufferaweightl5
+# for (j in 1: length(Downheader_ID)){
+#   setaweightl1[j] <- as.numeric(Downheader_new[j,21])
+#   setaweightr1[j] <- as.numeric(Downheader_new[j,22])
+#   setaweightl2[j] <- as.numeric(Downheader_new[j,23])
+#   setaweightr2[j] <- as.numeric(Downheader_new[j,24])
+#   setaweightl3[j] <- as.numeric(Downheader_new[j,25])
+#   setaweightr3[j] <- as.numeric(Downheader_new[j,26])
+#   setaweightl4[j] <- as.numeric(Downheader_new[j,27])
+#   setaweightr4[j] <- as.numeric(Downheader_new[j,28])
+#   setaweightl5[j] <- as.numeric(Downheader_new[j,29])
+#   setaweightr5[j] <- as.numeric(Downheader_new[j,30])
   
-  lwr1[j] <- setaweightr1[j] - bufferaweightr1 
-  uwr1[j] <- setaweightr1[j] + bufferaweightr1
-  lwr2[j] <- setaweightr2[j] - bufferaweightr2 
-  uwr2[j] <- setaweightr2[j] + bufferaweightr2
-  lwr3[j] <- setaweightr3[j] - bufferaweightr3 
-  uwr3[j] <- setaweightr3[j] + bufferaweightr3
-  lwr4[j] <- setaweightr4[j] - bufferaweightr4 
-  uwr4[j] <- setaweightr4[j] + bufferaweightr4
-  lwr5[j] <- setaweightr5[j] - bufferaweightr5 
-  uwr5[j] <- setaweightr5[j] + bufferaweightr5
+#   lwl1[j] <- setaweightl1[j] - bufferaweightl1 
+#   uwl1[j] <- setaweightl1[j] + bufferaweightl1
+#   lwl2[j] <- setaweightl2[j] - bufferaweightl2 
+#   uwl2[j] <- setaweightl2[j] + bufferaweightl2
+#   lwl3[j] <- setaweightl3[j] - bufferaweightl3 
+#   uwl3[j] <- setaweightl3[j] + bufferaweightl3
+#   lwl4[j] <- setaweightl4[j] - bufferaweightl4 
+#   uwl4[j] <- setaweightl4[j] + bufferaweightl4
+#   lwl5[j] <- setaweightl5[j] - bufferaweightl5 
+#   uwl5[j] <- setaweightl5[j] + bufferaweightl5
+#   
+#   lwr1[j] <- setaweightr1[j] - bufferaweightr1 
+#   uwr1[j] <- setaweightr1[j] + bufferaweightr1
+#   lwr2[j] <- setaweightr2[j] - bufferaweightr2 
+#   uwr2[j] <- setaweightr2[j] + bufferaweightr2
+#   lwr3[j] <- setaweightr3[j] - bufferaweightr3 
+#   uwr3[j] <- setaweightr3[j] + bufferaweightr3
+#   lwr4[j] <- setaweightr4[j] - bufferaweightr4 
+#   uwr4[j] <- setaweightr4[j] + bufferaweightr4
+#   lwr5[j] <- setaweightr5[j] - bufferaweightr5 
+#   uwr5[j] <- setaweightr5[j] + bufferaweightr5
  
-}
+# }
 
 
 ### time window - TIME & DURATION 
@@ -255,17 +256,17 @@ for (j in 1: length(Downheader_ID)){
                               & Upheader_new[,18] > la23[j] & Upheader_new[,18] < ua23[j]
                               & Upheader_new[,19] > la34[j] & Upheader_new[,19] < ua34[j]
                               & Upheader_new[,20] > la45[j] & Upheader_new[,20] < ua45[j]
-                              
-                              & Upheader_new[,21] > lwl1[j] & Upheader_new[,21] < uwl1[j]
-                              & Upheader_new[,22] > lwr1[j] & Upheader_new[,22] < uwr1[j]
-                              & Upheader_new[,23] > lwl2[j] & Upheader_new[,23] < uwl2[j]
-                              & Upheader_new[,24] > lwr2[j] & Upheader_new[,24] < uwr2[j]
-                              & Upheader_new[,25] > lwl3[j] & Upheader_new[,25] < uwl3[j]
-                              & Upheader_new[,26] > lwr3[j] & Upheader_new[,26] < uwr3[j]
-                              & Upheader_new[,27] > lwl4[j] & Upheader_new[,27] < uwl4[j]
-                              & Upheader_new[,28] > lwr4[j] & Upheader_new[,28] < uwr4[j]
-                              & Upheader_new[,29] > lwl5[j] & Upheader_new[,29] < uwl5[j]
-                              & Upheader_new[,30] > lwr5[j] & Upheader_new[,30] < uwr5[j]
+#                               
+#                               & Upheader_new[,21] > lwl1[j] & Upheader_new[,21] < uwl1[j]
+#                               & Upheader_new[,22] > lwr1[j] & Upheader_new[,22] < uwr1[j]
+#                               & Upheader_new[,23] > lwl2[j] & Upheader_new[,23] < uwl2[j]
+#                               & Upheader_new[,24] > lwr2[j] & Upheader_new[,24] < uwr2[j]
+#                               & Upheader_new[,25] > lwl3[j] & Upheader_new[,25] < uwl3[j]
+#                               & Upheader_new[,26] > lwr3[j] & Upheader_new[,26] < uwr3[j]
+#                               & Upheader_new[,27] > lwl4[j] & Upheader_new[,27] < uwl4[j]
+#                               & Upheader_new[,28] > lwr4[j] & Upheader_new[,28] < uwr4[j]
+#                               & Upheader_new[,29] > lwl5[j] & Upheader_new[,29] < uwl5[j]
+#                               & Upheader_new[,30] > lwr5[j] & Upheader_new[,30] < uwr5[j]
   ))
 }
 
@@ -319,6 +320,7 @@ UpheaderID <-Upsig_IM[Upidx,3]
 Upindex <- c()
 Upobjout <- c()
 
+
 for (w in 1: length(Upidx)){
 # for (w in 1: 20){
   Upindex <- Upidx[w]
@@ -342,7 +344,11 @@ for (w in 1: length(Upidx)){
 
 
 
-save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/07162014Jan0910.RData")  # for Jan 0910
+save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/08062014Jan0910.RData")  # for Jan 0910
+
+
+save(Upobjout, file="./ProcessedData/Jan0910/Upobjout.RData")
+save(Downobjout, file="./ProcessedData/Jan0910/Downobjout.RData")
 #####################################################################end
 # remove files
 

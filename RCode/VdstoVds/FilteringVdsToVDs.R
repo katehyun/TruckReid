@@ -5,12 +5,11 @@ load("./ProcessedData/Oct02/IrvineLoadinOct02")
 load("./ProcessedData/Mar20/IrvineLoadinMar20")
 
 
-
 ######## check duration and filter out (When WIM data comes in, step-by-step filtering approches needed) #######
 ### Time Window ###
 
 # buffertimewindow=0.35; # 0.3 min (VDS-VDS case)
-buffertimewindow=0.3; # 0.3 min (WIM-WIM case)
+buffertimewindow=0.5; # 0.3 min (WIM-WIM case)
 bufferduration = 0.2; # 0.2 min
 buffernumpnt = 500
 
@@ -129,9 +128,7 @@ for (w in 1: length(wimidx)){
   inwimsig <- f.normalization(inwimsig)
   splinewim <- f.interpolation(inwimsig,num,no_round)
   colnames(splinewim) <- c("outwimtime", "outwimmag")
-    #write.table(inDownsig, "./ProcessedData/TestCode/inDownsig.txt", sep="\t")
-    #write.table(splineDown, "./ProcessedData/TestCode/splineDown.txt", sep="\t")
-
+   
   wimobj <- c(splinewim[,2])
   wimobj <- t(wimobj)
   wimobjout <-rbind(wimobjout,  wimobj)
@@ -177,11 +174,23 @@ for (w in 1: length(vdsidx)){
     vdsobjout <-rbind(vdsobjout,  vdsobj)
   }
 
-save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Oct02/06302014.RData") # for Oct 02
+save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Oct02/0702014Oct02.RData") # for Oct 02
 save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Mar20/07272014Mar20.RData")  # for Mar 20
 
+save(vdsobjout, file="./ProcessedData/Mar20/vdsobjoutMar20.RData")
+save(wimobjout, file="./ProcessedData/Mar20/wimobjoutMar20.RData")
+save(vdsheaderID, file="./ProcessedData/Mar20/vdsheaderIDMar20.RData")
 #####################################################################end
+rm (Irvine.VDSMar20ML4Header1,Irvine.VDSMar20ML4Header2,Irvine.VDSMar20ML5Header1,Irvine.VDSMar20ML5Header1, 
+    Irvine.WIMMar20ML4Header,Irvine.WIMMar20ML5Header, Irvine.VDSMar20ML4sig1, Irvine.VDSMar20ML4sig2,
+    Irvine.VDSMar20ML5sig1, Irvine.VDSMar20ML5sig2, Irvine.WIMMar20ML4sig, Irvine.WIMMar20ML5sig)
 
+rm (Irvine.VDSMar20Header,Irvine.VDSMar20ML5Header2,Irvine.VDSMar20sig, Irvine.WIMMar20Header, Irvine.WIMMar20sig,
+    Irvine.WIMRec, Irvine.GTM)
+    
+rm(lb, ld, lp, setduratoin, setnumpnt, settime, up, ud, bufferduration, buffernumpnt, buffertimewindow)
+
+rm(rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank_magdif2, splineDown, splineUp, splineUpidx,ss, stret, swift)
 
 
 

@@ -2,7 +2,6 @@
 
 
 
-
 # FUNCTION - normalization
 f.normalization <- function (insig){
   outsig <- transform (insig, newtime=insig[,1] / insig[nrow(insig),1],
@@ -35,7 +34,7 @@ f.interpolation <- function (insig, num, no_round){
 
 
 # FUNCTION - swift
-f.swift <- function (insig, vds_swift_coeff, num , no_round){
+f.swift <- function (insig, splinewim, vds_swift_coeff, num , no_round){
  
   vds_swift_mag <- rep(NA, num)
   vds_swift_time <- rep(NA, num)
@@ -44,24 +43,24 @@ f.swift <- function (insig, vds_swift_coeff, num , no_round){
   swifttime<- rep(NA, num)
   swift_magdif <- rep(NA,1)
   
+  time <- seq(from= 0, to= 1, by = 1/(num-1))
   
   for (i in 1: length(vds_swift_coeff)){
     
     
-    vds_swift_time <- insig[,1] + vds_swift_coeff[i]
-    vds_swift_time <- f.round (vds_swift_time, no_round)
-    vds_swift_mag <- splinevds$outvdsmag
+    vds_swift_time <- time + vds_swift_coeff[i]
+    vds_swift_mag <- insig
     
     #vds_swift_out <- data.frame (vds_swift_time, vds_swift_mag)
     
     # LOOKUP!!!!! 
-    #swiftmag <- cbind(vds_swift_mag, swiftmag)
+   
     swifttime <- cbind(vds_swift_time, swifttime)
 
-    swift_tempmag <- vds_swift_mag [match (vds_swift_time, splinewim$outwimtime )]
+    swift_tempmag <- vds_swift_mag [match (vds_swift_time, time )]
     swift_tempmag[is.na(swift_tempmag)] <- vds_swift_mag
     
-    swift_magdif2 = abs(splinewim$outwimmag - swift_tempmag )
+    swift_magdif2 = abs(splinewim - swift_tempmag )
     
 
     swift_magdif3= sum(swift_magdif2)
@@ -79,22 +78,22 @@ f.swift <- function (insig, vds_swift_coeff, num , no_round){
 
 
 # FUNCTION - stret
-f.stret <- function (insig, vds_stret_coeff, num, no_round ){
+f.stret <- function (insig, splinewim, vds_stret_coeff, num, no_round ){
   
- 
+  insig <- swift$matrix
   vds_stret_mag <- rep(NA, num)
   vds_stret_time <- rep(NA, num)
   
   stretmag <- rep(NA, num)
   strettime<- rep(NA, num)
   stret_magdif <- rep(NA,1)
+  time <- seq(from= 0, to= 1, by = 1/(num-1))
   
   for (i in 1: length(vds_stret_coeff)){
     
     
     vds_stret_time <- insig[,1]* vds_stret_coeff[i]
-    vds_stret_time <- f.round (vds_stret_time, no_round)
-    
+    vds_stret_time <- f.round(vds_stret_time, no_round)
     vds_stret_mag <- insig[,2]
     #vds_stret_out <- data.frame (vds_stret_time, vds_stret_mag)
     
@@ -103,11 +102,11 @@ f.stret <- function (insig, vds_stret_coeff, num, no_round ){
     stretmag <- cbind(vds_stret_mag, stretmag)
     strettime <- cbind(vds_stret_time, strettime)
     
-    stret_tempmag <- vds_stret_mag [match (vds_stret_time, splinewim$outwimtime )]
+    stret_tempmag <- vds_stret_mag [match (vds_stret_time, time)]
     #stret_tempmag <- vds_stret_mag [match ( splinewim$outwimtime,vds_stret_time )]
     stret_tempmag[is.na(stret_tempmag)] <- vds_stret_mag
     
-    stret_magdif2 = abs(splinewim$outwimmag - stret_tempmag )
+    stret_magdif2 = abs(splinewim - stret_tempmag )
     
     
     stret_magdif3= sum(stret_magdif2)
@@ -245,8 +244,27 @@ f.pnn <- function ( nn, wimobjout1){
 }
 
 
+f.findpnnForNonss <- function (seqlevel, len1, vdssiglistfornonss , vdsobjout, vdsheaderID){
+  
+  vdsnonssout <- c()
+  splinevdsidx <- c()
+  splinevds  <- c()
+  vdsnonss<-c()
+  
+  for (q in 1: len1){
+   
+    splinevdsidx <-  match (vdssiglistfornonss[q] , vdsheaderID) 
+    splinevds <- vdsobjout[splinevdsidx,]
+    vdsnonss  <-splinevds [seq(1, length(splinevds ), seqlevel)]
+    vdsnonssout  <- rbind( vdsnonssout ,vdsnonss)
+      
+  }
+  return (vdsnonssout)
+}
+
+
 f.findpnn <- function (seqlevel, len_find_pnn, candi1, candi2, candi3, candi4, candi5, candi6, candi7, candi8 ){
- 
+  
   vdsobjout <- c()
   
   if (len_find_pnn == 2) {

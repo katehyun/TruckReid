@@ -19,7 +19,6 @@ f.round <- function (insig, no_round){
 }
 
 
-
 # FUNCTION - spline interpolation
 f.interpolation <- function (insig, num, no_round){ 
   outsig0 <- spline(insig[,4], insig[,5], num)
@@ -35,7 +34,7 @@ f.interpolation <- function (insig, num, no_round){
 
 
 # FUNCTION - swift
-f.swift <- function (insig, swift_coeff, num , no_round){
+f.swift <- function ( insig, splineDown, swift_coeff, num , no_round){
   
   Up_swift_mag <- rep(NA, num)
   Up_swift_time <- rep(NA, num)
@@ -44,12 +43,13 @@ f.swift <- function (insig, swift_coeff, num , no_round){
   swifttime<- rep(NA, num)
   swift_magdif <- rep(NA,1)
   
-  time <- seq(from= 0, to= 1, by = 1/num)
+  time <- seq(from= 0, to= 1, by = 1/(num-1))
   
   for (i in 1: length(swift_coeff)){
     
     
     Up_swift_time <- time + swift_coeff[i]
+    Up_swift_time <- f.round(Up_swift_time, no_round) # added
     Up_swift_mag <- insig
     
    
@@ -62,7 +62,7 @@ f.swift <- function (insig, swift_coeff, num , no_round){
     swift_tempmag[is.na(swift_tempmag)] <- Up_swift_mag
     
     swift_magdif2 = abs(splineDown - swift_tempmag )
-    swift_magdif3= sum(swift_magdif2)
+    swift_magdif3 = sum( swift_magdif2)
     
     swift_magdif <- cbind(swift_magdif3, swift_magdif) 
     
@@ -77,9 +77,9 @@ f.swift <- function (insig, swift_coeff, num , no_round){
 
 
 # FUNCTION - stret
-f.stret <- function (insig, stret_coeff, num, no_round ){
+f.stret <- function (insig, splineDown, stret_coeff, num, no_round ){
   
-  time <- seq(from= 0, to= 1, by = 1/num)
+  time <- seq(from= 0, to= 1, by = 1/(num-1))
   Up_stret_mag <- rep(NA, num)
   Up_stret_time <- rep(NA, num)
   
@@ -91,7 +91,8 @@ f.stret <- function (insig, stret_coeff, num, no_round ){
     
     
     Up_stret_time <- insig[,1]* stret_coeff[i]
-     
+    Up_stret_time <- f.round(Up_stret_time, no_round)
+      
     Up_stret_mag <- insig[,2]
     
     # LOOKUP!!!!! 
@@ -123,21 +124,10 @@ f.stret <- function (insig, stret_coeff, num, no_round ){
 
 ### draw signature
 f.drawDownsignature <- function (no){
-  
-  sig_idx <- Downidx[no]
-  insig <- Downsig_IM[sig_idx+1,]
-  sig_idx <- sig_idx+1
-  
-  while (Downsig_IM[sig_idx+1,1] < 100){
-    insig <- rbind(insig, Downsig_IM[sig_idx+1,])
-    sig_idx <- sig_idx+1
-  }
-  
-  insig <- f.normalization(insig)
-  splinesig <- f.interpolation(insig,num,no_round)
-  
-  insig_time <- splinesig[,1]
-  insig_mag <- splinesig[,2]
+ 
+  time <- seq(from= 0, to= 1, by = 1/(num-1))
+  insig_time <- time
+  insig_mag <- Downobjout[no,]
   
   
   sigplot <- matplot(insig_time, insig_mag, main=paste("Target (Downstream)", no[1]))
@@ -151,74 +141,78 @@ f.drawDownsignature <- function (no){
 
 f.drawUpsignature <- function (n1,n2){
   
-  sig_idx <- Upidx[[n1]][n2]
-  insig <- Upsig_IM[sig_idx+1,]
-  sig_idx <- sig_idx+1
+    sig_idx <- as.numeric( Upsiglist[[n1]][n2] )
+    insig <- match(sig_idx, Upheader_new$sigid)
+
   
-  while (Upsig_IM[sig_idx+1,1] < 100){
-    insig <- rbind(insig, Upsig_IM[sig_idx+1,])
-    sig_idx <- sig_idx+1
-  }
   
-  insig <- f.normalization(insig)
-  splinesig <- f.interpolation(insig,num,no_round)
+    time <- seq(from= 0, to= 1, by = 1/(num-1))
+    insig_time <- time
+    insig_mag <- Upobjout[insig,]
   
-  insig_time <- splinesig[,1]
-  insig_mag <- splinesig[,2]
-  
-  sigplot <- plot(insig_time, insig_mag, main=paste("Candidate (Upstream)", n1[1],"-", n2[1]))
-  
+    
+    sigplot <- plot(insig_time, insig_mag, main=paste("Candidate (Upstream)", n1[1],"-", n2[1]))
+    
   return (sigplot)
 }
 
 
 f.Updraw <- function (sigid){
   
-  sig_idx <- which( Upsig_IM[,3] %in% sigid)
-  insig <- Upsig_IM[sig_idx+1,]
-  sig_idx <- sig_idx+1
+  insig <- match(sigid, Upheader_new$sigid)
   
-  while (Upsig_IM[sig_idx+1,1] < 100){
-    insig <- rbind(insig, Upsig_IM[sig_idx+1,])
-    sig_idx <- sig_idx+1
-  }
   
-  insig <- f.normalization(insig)
-  splinesig <- f.interpolation(insig,num,no_round)
+  time <- seq(from= 0, to= 1, by = 1/(num-1))
+  insig_time <- time
+  insig_mag <- Upobjout[insig,]
   
-  insig_time <- splinesig[,1]
-  insig_mag <- splinesig[,2]
   
-  sigplot <- plot(insig_time, insig_mag, main=paste("Candidate (Upstream)", sigid[1]))
-  
+  sigplot <- plot(insig_time, insig_mag, main=paste("Target (Upstream)", sigid[1]))
   return (sigplot)
-  
 }
+  
 
 
 f.Downdraw <- function (sigid){
   
-  sig_idx <- which( Downsig_IM[,3] %in% sigid)
-  insig <- Downsig_IM[sig_idx+1,]
-  sig_idx <- sig_idx+1
+  insig <- match(sigid, Downheader_new$sigid)
   
-  while (Downsig_IM[sig_idx+1,1] < 100){
-    insig <- rbind(insig, Downsig_IM[sig_idx+1,])
-    sig_idx <- sig_idx+1
-  }
   
-  insig <- f.normalization(insig)
-  splinesig <- f.interpolation(insig,num,no_round)
+  time <- seq(from= 0, to= 1, by = 1/(num-1))
+  insig_time <- time
+  insig_mag <- Downobjout[insig,]
   
-  insig_time <- splinesig[,1]
-  insig_mag <- splinesig[,2]
   
-  sigplot <- plot(insig_time, insig_mag, main=paste("Target (Downstream)", sigid[1]))
+  sigplot <- plot(insig_time, insig_mag, main=paste("Candidate (Downstream)", sigid[1]))
   
   return (sigplot)
-  
 }
 
+
+f.UpdrawAfterSS <- function (n1, n2){
+  
+
+  
+  if (n1==1) {
+    insig_mag <- candi_1[[n2]][[1]][,2]
+    insig_time <- candi_1[[n2]][[1]][,1]
+  }
+  
+  if (n1==2) {
+    insig_mag <- candi_2[[n2]][[1]][,2]
+    insig_time <- candi_2[[n2]][[1]][,1]
+  }
+  
+  if (n1==3) {
+    insig_mag <- candi_3[[n2]][[1]][,2]
+    insig_time <- candi_3[[n2]][[1]][,1]
+  }
+
+  
+  
+  sigplot <- plot(insig_time, insig_mag, main=paste("Candidate (AfterSS_Upstream)", n2[1],"-", n1[1]))
+  return (sigplot)
+}
 
 
 

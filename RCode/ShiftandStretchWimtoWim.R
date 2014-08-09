@@ -3,18 +3,17 @@
 #library(plyr)
 #rm(list=ls())
 
-#load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/Jan0910/07162014Jan0910.RData") 
+load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/08062014Jan0910.RData") 
 
-#setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine") 
-#setwd("C:/Users/Kyung Hyun/Dropbox/Kate/ReID/DataIrvine") 
+#setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid") 
+#setwd("C:/Users/Kyung Hyun/Dropbox/Kate/ReID/TruckReid") 
 #### loading functionbook2
-
-
-
+load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/Upobjout.RData")
+load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/Downobjout.RData")
 
 
 ### Input ready 
-num=1000 #1000
+num=1000 
 no_round = 1000
 
 
@@ -50,15 +49,18 @@ candi_8 <- list()
 candi_magdif <- list()
 a_basemagdif <- list()
 
-swift_coeff = seq (-0.05, 0.05, by=0.0010)
-stret_coeff = seq ( 0.95, 1.05, by=0.010)
+
+
+swift_coeff = seq (-0.20, 0.20, by=0.0010)
+stret_coeff = seq ( 0.80, 1.20, by=0.001)
+
+
+UpheaderID <- Upheader_new$sigid
+
 
 #Down
 
-for (w in 1:length(Downidx)){
-#for (w in 1:3){  # for testing
-
-#w=1
+for (w in 1:length(Downheader_ID)){
 
   splineDown <- Downobjout [w,]
 
@@ -67,6 +69,7 @@ for (w in 1:length(Downidx)){
       
       a_magdif[w] <- list(c(99999))
       a_basemagdif[w] <- list(c(99999))    
+      
       candi_1[w] <- list(c(99999))
       candi_2[w] <- list(c(99999))
       candi_3[w] <- list(c(99999))
@@ -87,8 +90,7 @@ for (w in 1:length(Downidx)){
         base_magdif <- c()
         
          for (q in 1: length(Upsiglist[[w]])){
-#for (q in 1: 2){
-# q=1      
+  
             
             min_stretmagdif <- c()
             splineUpidx <- match (Upsiglist[[w]][q] , UpheaderID)
@@ -98,22 +100,22 @@ for (w in 1:length(Downidx)){
       
             
             # first iteration
-            swift <- f.swift (splineUp, swift_coeff, num , no_round )
-            stret <- f.stret (swift$matrix, stret_coeff, num , no_round)
+            swift <- f.swift ( splineUp , splineDown, swift_coeff, num , no_round )
+            stret <- f.stret (swift$matrix, splineDown , stret_coeff, num , no_round)
             
             # start iteration
             
             min_stretmagdif = stret$mv
             min_swiftmagdif = swift$mv
             
-            if ((min_stretmagdif - min_swiftmagdif ) < 0.5 ){
+            if ((min_stretmagdif - min_swiftmagdif ) < 0.1 ){
               
               Up_stret <- stret$matrix
             }
             
             else {
               
-              while (min_swiftmagdif - min_stretmagdif > 0.5) {
+              while (min_swiftmagdif - min_stretmagdif > 0.1) {
                 
                 swift <- f.swift (stret$matrix, swift_coeff, num , no_round)
                 stret <- f.stret (swift$matrix, stret_coeff, num , no_round)

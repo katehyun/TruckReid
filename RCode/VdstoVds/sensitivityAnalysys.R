@@ -1,16 +1,14 @@
 rm(list=ls())
-setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine") 
+setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid") 
 load("./ProcessedData/Mar20/IrvineLoadinMar20")
-
-
-
-
+load("./ProcessedData/Mar20/wimobjoutMar20.RData")
+#load function book
 
 
 # buffertimewindow=0.5; # 0.5 min = 30 second
-# buffertimewindow=1;  # 1 min 
+#  buffertimewindow=1;  # 1 min 
 # buffertimewindow=10;  # 10 min 
- buffertimewindow=30;  # 30 min 
+buffertimewindow=30;  # 30 min 
 
 bufferduration = 0.15; # 0.2 min
 buffernumpnt = 500
@@ -27,6 +25,13 @@ vdsheader_new <-subset(vdsheader_new, utc < 1363813200000)
 
 wimheader = Irvine.WIMMar20Header
 wimheader_new <-subset(wimheader, v8 > 300)
+
+wimheader_new <-subset(wimheader_new, utc > 1363800600000)
+wimheader_new <-subset(wimheader_new, utc < 1363831200000)
+
+wimheader_startidx <- which.max(wimheader_new$utc[wimheader_new$utc < 1363809600000])
+wimheader_endidx <- which.max(wimheader_new$utc[wimheader_new$utc < 1363813200000])
+
 wimheader_new <-subset(wimheader_new, utc > 1363809600000)
 wimheader_new <-subset(wimheader_new, utc < 1363813200000)
 
@@ -86,7 +91,7 @@ vdssiglist <- list()
 
 for (j in 1: lenwim){ 
   
-  vdssiglist[j] <- list(subset(vdsheader_new$vdssigid,  vdsheader_new$utc > lb[j] & vdsheader_new$utc < settime[j] 
+  vdssiglist[j] <- list(subset(vdsheader_new$vdssigid,  vdsheader_new$utc > lb[j] & vdsheader_new$utc <= settime[j] 
                                & vdsheader_new$v7 > ld[j] & vdsheader_new$v7 < ud[j]
                                & vdsheader_new$v8 > lp[j] & vdsheader_new$v8 < up[j]))
 }
@@ -101,6 +106,9 @@ for (i in 1:length(vdssiglist)){
 }
 
 
-#save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/SensitivityAnalysis/Mar20tw1.RData")  # for 1 min
-# save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/SensitivityAnalysis/Mar20tw10.RData")  # for 10 min
- save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/SensitivityAnalysis/Mar20tw30.RData")  # for 30 min
+#wimobjout <- wimobjout[(wimheader_startidx+1):wimheader_endidx,]
+#save(wimobjout, file="./ProcessedData/SensitivityAnalysis/wimobjout_tw.RData")
+
+#save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/SensitivityAnalysis/Mar20tw1.RData")  # for 1 min
+#save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/SensitivityAnalysis/Mar20tw10.RData")  # for 10 min
+ save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/SensitivityAnalysis/Mar20tw30.RData")  # for 30 min

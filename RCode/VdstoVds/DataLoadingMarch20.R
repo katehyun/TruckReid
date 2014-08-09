@@ -1,7 +1,6 @@
 ################ Data Input- Oct 02 ####################
 ### Irvine Mar 20
 
-
 Irvine.VDSMar20ML4Header1=read.table("./RawData/VDSMar/ML40320/501_IST0001297_CA130320080000_fileIdx.txt",  fill=T)
 Irvine.VDSMar20ML4Header2=read.table("./RawData/VDSMar/ML40320/501_IST0001297_CA130320171512_fileIdx.txt",  fill=T)
 Irvine.VDSMar20ML4sig1=read.table("./RawData/VDSMar/ML40320/IST0001297_CA130320080000.txt", fill=T)

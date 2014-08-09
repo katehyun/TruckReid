@@ -8,7 +8,6 @@ LC.Jan09ML3Header2=read.table("./RawData/LCJan/ML30109/84_IST0001297_CA130109233
 LC.Jan09ML3sig1=read.table("./RawData/LCJan/ML30109/IST0001297_CA130109212114.txt", fill=T)
 LC.Jan09ML3sig2=read.table("./RawData/LCJan/ML30109/IST0001297_CA130109233022.txt", fill=T)
 
-
 LC.Jan10ML3Header1=read.table("./RawData/LCJan/ML30110/84_IST0001297_CA130110080000_fileIdx.txt",  fill=T)
 LC.Jan10ML3Header2=read.table("./RawData/LCJan/ML30110/84_IST0001297_CA130110154334_fileIdx.txt",  fill=T)
 LC.Jan10ML3Header3=read.table("./RawData/LCJan/ML30110/84_IST0001297_CA130110210348_fileIdx.txt",  fill=T)
@@ -35,10 +34,10 @@ LC.Jan10ML4sig4=read.table("./RawData/LCJan/ML40110/IST0001210_CA130110234405.tx
 SO.Jan09ML3Header1=read.table("./RawData/SOJan/ML30109/810_IST0001070_CA130109195745_fileIdx.txt",  fill=T)
 SO.Jan09ML3sig1=read.table("./RawData/SOJan/ML30109/IST0001070_CA130109195745.txt", fill=T)
 
-SO.Jan10ML3Header1=read.table("./RawData/SOJan/ML30110/810_IST0001030_CA130110080000_fileIdx.txt",  fill=T)
-SO.Jan10ML3Header2=read.table("./RawData/SOJan/ML30110/810_IST0001030_CA130110192108_fileIdx.txt",  fill=T)
-SO.Jan10ML3sig1=read.table("./RawData/SOJan/ML30110/IST0001030_CA130110080000.txt", fill=T)
-SO.Jan10ML3sig2=read.table("./RawData/SOJan/ML30110/IST0001030_CA130110192108.txt", fill=T)
+SO.Jan10ML3Header1=read.table("./RawData/SOJan/ML30110/810_IST0001070_CA130110080000_fileIdx.txt",  fill=T)
+SO.Jan10ML3Header2=read.table("./RawData/SOJan/ML30110/810_IST0001070_CA130110192108_fileIdx.txt",  fill=T)
+SO.Jan10ML3sig1=read.table("./RawData/SOJan/ML30110/IST0001070_CA130110080000.txt", fill=T)
+SO.Jan10ML3sig2=read.table("./RawData/SOJan/ML30110/IST0001070_CA130110192108.txt", fill=T)
 
 SO.Jan09ML4Header1=read.table("./RawData/SOJan/ML40109/810_IST0001030_CA130109195745_fileIdx.txt",  fill=T)
 SO.Jan09ML4sig1=read.table("./RawData/SOJan/ML40109/IST0001030_CA130109195745.txt", fill=T)
@@ -519,3 +518,5 @@ colnames(SO.Jan0910sig) <- c("id", "mag", "v3","sigid")
 # write.table(SO.Jan0910sig, "./ProcessedData/SO.Jan0910sig.txt", sep="\t")
 # load functionbook2
 save.image("./ProcessedData/Jan0910/SOLCLoadinJan0910")
+
+

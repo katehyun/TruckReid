@@ -2,30 +2,52 @@ utils:::menuInstallPkgs()
 rm(list=ls())
 # load functonbook2
 library(pnn)
-setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine") 
+setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid") 
 
-
-# load MAr20 tw
-load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/SensitivityAnalysis/Mar20tw1_nonss.RData")
-load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/SensitivityAnalysis/Mar20tw10_nonss.RData")
-load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/SensitivityAnalysis/Mar20tw30_nonss.RData")
-
-
-load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/Jan0910/non_ss_shiftandstretch_Jan0910_2.RData")
-rm (SO.Jan09ML3sig1, SO.Jan09ML4sig1, SO.Jan10ML4sig2, )
+load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/shiftandstretch_Jan0910.RData")
+load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/Upobjout.RData ")
+load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/Downobjout.RData ")
+rm (rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8 )
+rm(swift, stret, ss, splineDown, splineUp, minstretmagdif, minswiftmagdif, magdif, candi_magdif)
 ############################################################# do not run when loading RData
 ### target 1 & 2 :  base and after shift and stretch
 # min magdif
+min_a_magdif<-vector()
+for (i in 1: length(a_magdif)){
+  min_a_magdif[i] <- min(a_magdif[[i]])
+}
+
 min_a_basemagdif<-vector()
 for (i in 1: length(a_basemagdif)){
   min_a_basemagdif[i] <- min(a_basemagdif[[i]])
 }
 
-idx_basemagdif <- c()
+# second min
+second_min_a_magdif <- c()
+for (i in 1: length(a_magdif)){
+  n <- length(a_magdif[[i]])
+  if (n > 1) {
+    second_min_a_magdif[i] <- sort(a_magdif[[i]], partial=n-1)[n-1]
+  }
+  else {
+    second_min_a_magdif[i] <- c(999)
+  }
+}
 
-a <- c()
+second_min_a_basemagdif <- c()
+for (i in 1: length(a_basemagdif)){
+  n <- length(a_basemagdif[[i]])
+  if (n > 1) {
+    second_min_a_basemagdif[i] <- sort(a_basemagdif[[i]],partial=n-1)[n-1]
+  }
+  else {
+    second_min_a_basemagdif[i] <- c(999)
+  }
+}
+
 
 idx_basemagdif <- lapply(a_basemagdif,which.min)
+idx_magdif <- lapply(a_magdif,which.min)
 
 base_Upid <- c()
 base_Upid_after <- c()
@@ -48,97 +70,139 @@ for (i in 1:length(idx_basemagdif)){
   
 }
 
+a_Upid <- c()
+base_Upid <- c()
+a_Upid_after <- c()
 
-# Mar 20
-rm(Target_baseanalysis_Mar20_table)
-Downtarget=Downtarget[1:length(candi_1)]
+j <- 1
+for (i in 1:length(a_magdif)){
+  
+  a <- unlist(idx_magdif[i])
+  b <- unlist(idx_magdif[i])
+  
+  if (length(Upsiglist[[j]]) == 0 ){
+    
+    a_Upid[i] <-999
+    base_Upid[i] <-999
+    j <- j+1}
+  
+  else {
+    
+    a_Upid[i] <- Upsiglist[[j]][a]
+    base_Upid[i] <- Upsiglist[[j]][b]
+    j <- j+1
+  }
+  
+}
 
-Target_baseanalysis_Mar20 <- (cbind(Downtarget, base_Upid))
-colnames(Target_baseanalysis_Mar20) <- c("Downid", "baseUpid")
-Target_baseanalysis_Mar20_obj  <- (matching_Mar20$sigid  [ match ( Downtarget,matching_Mar20$Downsigid )])
-Target_baseanalysis_Mar20_table <- cbind(Target_baseanalysis_Mar20, Target_baseanalysis_Mar20_obj)
-
-Target_baseanalysis_Mar20_table<- cbind(Target_baseanalysis_Mar20_table, min_a_basemagdif )
-
-IrvineAllFHWAClass <- read.table("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/RawData/IrvineAllFHWAClass.txt", fill=T)
-IrvineMarFHWAClass <- IrvineAllFHWAClass[,6] [match (Downtarget, IrvineAllFHWAClass[,3])] 
-Target_baseanalysis_Mar20_table<- cbind(Target_baseanalysis_Mar20_table, IrvineMarFHWAClass)
-
-Target_baseanalysis_Mar20_resultbase <- table(Target_baseanalysis_Mar20_obj == base_Upid)
-
-
-utils::View(Target_baseanalysis_Mar20_resultbase)
-
-
-save(Target_baseanalysis_Mar20_table, file="./ProcessedData/SensitivityAnalysis/Target_base_tw10_1_Mar20.RData")
-write.table(Target_baseanalysis_Mar20_table, "./ProcessedData/SensitivityAnalysis/Target_base_tw10_1_Mar20.txt", sep="\t")
 
 # Jan 0910
+p <- 10
+rm(Target_baseanalysis_Jan0910_table, Result_NN, Result)
+Target_baseanalysis_Jan0910_obj2 <- rep(NA, length(a_Upid))
 
-rm(Target_baseanalysis_Jan0910_table, Result_NN)
+Downtarget <- Downheader_ID
 
-SOLCAllFHWAClass <- read.table("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/RawData/LCJan/LCJan_v1.txt", fill=T)
+
+SOLCAllFHWAClass <- read.table("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/RawData/LCJan/LCJan_v1.txt", fill=T)
 SOLCFHWAClass <- SOLCAllFHWAClass[,6] [match (Downtarget, SOLCAllFHWAClass[,3])] 
-Downtarget=Downtarget[1:length(candi_1)]
-Target_baseanalysis_Jan0910_obj  <- (matching$SO[ match ( Downtarget, matching$LC )])
 
-Target_baseanalysis_Jan0910_table <- cbind(SOLCFHWAClass,min_a_basemagdif, Downtarget,  Target_baseanalysis_Jan0910_obj,
-                                           base_Upid )
-threshold_NN <- c(30, 40, 50, 60, 70, 99999) 
+Downtarget=Downtarget[1:length(candi_1)]
+Target_baseanalysis_Jan0910_obj  <- (matching$SO[ match ( Downtarget,  matching$LC )])
+Target_baseanalysis_Jan0910_obj2 <- Target_baseanalysis_Jan0910_obj
+
+Target_baseanalysis_Jan0910_obj2[is.na ( Target_baseanalysis_Jan0910_obj2)]  <- c(999)
+  
+  
+  
+Target_baseanalysis_Jan0910_table <- cbind(SOLCFHWAClass,min_a_basemagdif,min_a_magdif, second_min_a_basemagdif,
+                                           second_min_a_magdif,  Downtarget,  Target_baseanalysis_Jan0910_obj, 
+                                           Target_baseanalysis_Jan0910_obj2, base_Upid )
+                                          
+threshold_NN <- c(99999, 20, 30, 40, 50, 60, 70, 80) 
 Result_NN <- data.frame()
 
 
 for (j in 1: length(threshold_NN)) {
   
-  for (i in 1:length(idx_basemagdif)){
-    if (min_a_basemagdif[i] < threhold_NN[j]){
-      base_Upid_after[i] <- base_Upid[i]
+  for (i in 1:length(a_magdif)){
+    if (min_a_magdif[i] < threshold_NN[j]){
+      a_Upid_after[i] <- a_Upid[i]
     }
     else {
-      base_Upid_after[i] <- 999
+      a_Upid_after[i] <- c(999)
     }
-  }
+ }
   
-  Target_baseanalysis_Jan0910_table <- cbind ( Target_baseanalysis_Jan0910_table,base_Upid_after )
+  Target_baseanalysis_Jan0910_table <- cbind ( Target_baseanalysis_Jan0910_table, a_Upid_after )
   
   
   # result
-  missing_nonthreshold <- length(subset(Target_baseanalysis_Jan0910_table[,3], base_Upid !=Target_baseanalysis_Jan0910_obj))
-  matching_nonthreshold <- length(subset(Target_baseanalysis_Jan0910_table[,3], base_Upid ==Target_baseanalysis_Jan0910_obj))
-  cmr_matching_nonthreshold <- matching_nonthreshold / (matching_nonthreshold+missing_nonthreshold  )
-  
+#   missing_nonthreshold <- length(subset(Target_baseanalysis_Jan0910_table[,6], a_Upid_after !=Target_baseanalysis_Jan0910_obj))
+#   matching_nonthreshold <- length(subset(Target_baseanalysis_Jan0910_table[,6], a_Upid_after ==Target_baseanalysis_Jan0910_obj))
+#   cmr_matching_nonthreshold <- matching_nonthreshold / (matching_nonthreshold+missing_nonthreshold  )
+   
   missing_obj <- length (Target_baseanalysis_Jan0910_obj[is.na(Target_baseanalysis_Jan0910_obj)]) 
   matching_obj <- length(Target_baseanalysis_Jan0910_obj) - missing_obj
   
-  matching_NN_nonss <-table(Target_baseanalysis_Jan0910_obj == base_Upid_after)["TRUE"]
-  missing_NN_nonss <- table(base_Upid_after == c(999))["TRUE"]
+#   matching_NN_nonss <-table(Target_baseanalysis_Jan0910_obj == base_Upid)["TRUE"]
+#   missing_NN_nonss <- table(base_Upid == c(999))["TRUE"]
   
-  cmr_matching <- 1 - (abs (matching_NN_nonss - matching_obj )/ matching_obj)
-  cmr_missing <-  1 - (abs(missing_NN_nonss-missing_obj) / missing_obj)
+  matching_NN <-table(Target_baseanalysis_Jan0910_obj == a_Upid_after)["TRUE"]
+  missing_NN <- table(a_Upid_after == c(999))["TRUE"]
   
-  Result <- data.frame(matching_nonthreshold[1], missing_nonthreshold[1], cmr_matching_nonthreshold[1],
-                       matching_obj[1], missing_obj[1], matching_NN_nonss[[1]],  missing_NN_nonss[[1]],
-                       cmr_matching[[1]], cmr_missing[[1]])
+#   cmr_basematching <- 1 - (abs (matching_NN_nonss - matching_obj )/ matching_obj)
+#   cmr_basemissing <-  1 - (abs (missing_NN_nonss - missing_obj) / missing_obj)
+ 
+ 
+#   cmr_matching <- 1 - (abs (matching_NN - matching_obj )/ matching_obj)
+#   cmr_missing <-  1 - (abs(missing_NN-missing_obj) / missing_obj)
+
+
+  CMVeh <-  matching_NN
+  CVeh <- matching_obj[1]
+  MVeh <- sum(   (as.numeric( Target_baseanalysis_Jan0910_table[,p])) > 1000 )  
+                          
+ 
+  SIMR <- CMVeh / CVeh
+  SCMR <- CMVeh / MVeh
+  
+  MMVeh <- length(  subset(Target_baseanalysis_Jan0910_table[,1], as.numeric( Target_baseanalysis_Jan0910_table[,8] ) 
+                           !=  as.numeric( Target_baseanalysis_Jan0910_table[,p])   ))
+  
+  p <- p+1
+  Veh <- length(Target_baseanalysis_Jan0910_table[,1])
+  SER <- MMVeh / Veh
+  
+  Result <- data.frame(threshold_NN[j], matching_obj[1], missing_obj[1], 
+
+                       matching_NN[[1]],  missing_NN[[1]],
+                      CMVeh, CVeh, MVeh, SIMR, SCMR, MMVeh, Veh, SER )
   
   Result_NN <- rbind(Result_NN, Result)
 }
 
 
-colnames(Result_NN) <- c("matching_nonthreshold", "missing_nonthreshold", "cmr_matching_nonthreshold",
-                         "matching_obj", "missing_obj", "matching_NN_nonss", "missing_NN_nonss",
-                         "cmr_matching", "cmr_missing")
+colnames(Result_NN) <- c("Threhsold", "matching_obj", "missing_obj", 
+                         "matching_NN", "missing_NN", 
+                         "CMVeh", "CVeh", "MVeh", "SIMR", "SCMR", "MMVeh", "Veh", "SER")
+
+
+
 utils::View(Result_NN)
 
-save(Target_baseanalysis_Jan0910_table, file="./ProcessedData/Jan0910/Target_base_nonss_Jan0910.RData")
-write.table(Target_baseanalysis_Jan0910_table, "./ProcessedData/Jan0910/Target_base_nonss_Jan0910.txt", sep="\t")
+
+
+save(Target_baseanalysis_Jan0910_table, file="./ProcessedData/Jan0910/Target_base_Jan0910.RData")
+write.table(Target_baseanalysis_Jan0910_table, "./ProcessedData/Jan0910/Target_base_Jan0910.txt", sep="\t")
 write.table(Result_NN, "./ProcessedData/Jan0910/Result_NN.txt", sep="\t")
 
 ### target 3 : PNN
 ############################################################################## start here when loading RData
 ### AFTER LOADING START HERE!!!
 # run pnn
-Target_pnnanalysis_Mar20_resultpnn  <- table(c(0,0)) # Mar20
-Target_pnnanalysis_Mar20_resultpnn2  <- table(c(0,0)) # Mar20
+Target_pnnanalysis_Jan0910_resultpnn  <- table(c(0,0)) # Mar20
+Target_pnnanalysis_Jan0910_resultpnn2  <- table(c(0,0)) # Mar20
 
 
 Downpnn <- list()
@@ -194,17 +258,17 @@ f.pnn <- function ( nn, Downobjout1){
 
 
 
-for (w in 1: length(candi_1)){
-  #   for (w in 1: 2){
+for (w in 1: length(a_magdif)){
   
-  find_pnnindex[w] <- list( a_basemagdif[[w]] )
+  
+  find_pnnindex[w] <- list( a_magdif[[w]] )
   len_find_pnn[w] <- length(find_pnnindex[[w]])
-  find_pnn_order[[w]] <-  rank(a_basemagdif[[w]])
+  find_pnn_order[[w]] <-  rank(a_magdif[[w]])
   
-  min_a_magdif = min(a_basemagdif[[w]])
-  find_pnnindex2[w] <- list( which( a_basemagdif[[w]] < min_a_magdif * 1.5 ))
+  min_a_magdif = min(a_magdif[[w]])
+  find_pnnindex2[w] <- list( which( a_magdif[[w]] < min_a_magdif * 2 ))
   len_find_pnn2[w] <- length(find_pnnindex2[[w]])
-  find_pnn_order2[[w]] <-  rank(a_basemagdif[[w]])
+  find_pnn_order2[[w]] <-  rank(a_magdif[[w]])
   
 }
 
@@ -216,7 +280,7 @@ Downobjout1 <- c()
 for (w in 1: length(candi_1)){ 
   # for (w in 1: 2){ 
   Up_obj <- c()
-  Upobjout <- c()
+  objout <- c()
   
   
   len1 <- len_find_pnn[w]
@@ -235,15 +299,15 @@ for (w in 1: length(candi_1)){
   
   if (len1 > 1) {
     
-    Upobjout <- f.findpnn(seqlevel, len1, candi1, candi2, candi3, candi4, candi5, candi6, candi7, candi8 )
-    row.names(Upobjout) <- NULL
+    objout <- f.findpnn(seqlevel, len1, candi1, candi2, candi3, candi4, candi5, candi6, candi7, candi8 )
+    row.names(objout) <- NULL
     
     if (len1 > 8 ){
       len1 <- 8
     }
     
     Up_obj <-(Up_obj_matrix[1:len1])
-    pnn_md <- data.frame(Up_obj, Upobjout )
+    pnn_md <- data.frame(Up_obj, objout )
     nn <- learn( pnn_md, category.column=1)
     nn <- smooth(nn, sigma)
     
@@ -260,7 +324,7 @@ for (w in 1: length(candi_1)){
 for (w in 1: length(candi_1)){ 
   # for (w in 1: 2){ 
   Up_obj2 <- c()
-  Upobjout2 <- c()
+  objout2 <- c()
   
   
   len2 <- len_find_pnn2[w]
@@ -280,8 +344,8 @@ for (w in 1: length(candi_1)){
   if (len2 > 1) {
     
     
-    Upobjout2 <- f.findpnn(seqlevel, len2, candi1, candi2, candi3, candi4, candi5, candi6, candi7, candi8 )
-    row.names(Upobjout2) <- NULL
+    objout2 <- f.findpnn(seqlevel, len2, candi1, candi2, candi3, candi4, candi5, candi6, candi7, candi8 )
+    row.names(objout2) <- NULL
     
     
     if (len2 > 8 ){
@@ -289,7 +353,7 @@ for (w in 1: length(candi_1)){
     }
     
     Up_obj2 <-(Up_obj_matrix[1:len2])
-    pnn_md2 <- data.frame(Up_obj2, Upobjout2 )
+    pnn_md2 <- data.frame(Up_obj2, objout2 )
     nn2 <- learn( pnn_md2, category.column=1)
     nn2 <- smooth(nn2, sigma)
     
@@ -305,27 +369,17 @@ for (w in 1: length(candi_1)){
 
 ### only pnn
 
-for (w in 1: length(candi_1)){
+for (w in 1: length(a_magdif)){
   #   for (w in 1: 2){
   if (as.numeric (Downpnn[[w]][[1]][[1]]) < 100 ) {
     pnn_Upid[w] <- Upsiglist[[w]] [which ( as.numeric( Downpnn[[w]][[1]][[1]] )  == find_pnn_order[[w]])]
   }
   
   else {
-    pnn_Upid[w] <- base_Upid
+    pnn_Upid[w] <- base_Upid[w]
   }
   
 }
-
-# Mar20
-rm(Target_pnnanalysis_Mar20,Target_pnnanalysis_Mar20_table )
-Target_pnnanalysis_Mar20 <- (cbind(Downtarget[1:length(candi_1)], base_Upid[1:length(candi_1)], pnn_Upid[1:length(candi_1)]))
-colnames(Target_pnnanalysis_Mar20) <- c("Downid", "baseUpid",  "pnnUpid")
-Target_pnnanalysis_Mar20 <- cbind(Target_pnnanalysis_Mar20, IrvineOctFHWAClass)
-
-Target_pnnanalysis_Mar20_resultpnn <- table(Target_baseanalysis_Mar20_obj  == pnn_Upid)
-Target_pnnanalysis_Mar20 <- cbind(Target_pnnanalysis_Mar20, Target_baseanalysis_Mar20_obj)
-
 
 max_pnn_prob <- vector()
 for (i in 1: length(Downpnn)){
@@ -338,72 +392,17 @@ for (i in 1: length(Downpnn)){
   
 }
 
-Target_pnnanalysis_Mar20_table<- cbind(Target_pnnanalysis_Mar20, max_pnn_prob)
-
-utils::View(Target_pnnanalysis_Mar20_resultpnn)
-
-save(Target_pnnanalysis_Mar20_table, file="./ProcessedData/SensitivityAnalysis/Target_pnn_tw10_1_Mar20.RData")
-write.table(Target_pnnanalysis_Mar20_table, "./ProcessedData/SensitivityAnalysis/Target_pnn_tw10_1_Mar20.txt", sep="\t")
-
-# Jan 0910
-
-SOLCAllFHWAClass <- read.table("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/RawData/LCJan/LCJan_v1.txt", fill=T)
-SOLCFHWAClass <- SOLCAllFHWAClass[,6] [match (Downtarget, SOLCAllFHWAClass[,3])] 
-Downtarget=Downtarget[1:length(candi_1)]
-Target_pnnanalysis_Jan0910_obj  <- (matching$SO[ match ( Downtarget, matching$LC )])
-
-Target_pnnanalysis_Jan0910_table <- (cbind(Downtarget[1:length(candi_1)], base_Upid[1:length(candi_1)], pnn_Upid[1:length(candi_1)]))
-colnames(Target_pnnanalysis_Jan0910) <- c("Downid", "baseUpid",  "pnnUpid")
-Target_pnnanalysis_Jan0910_table <- cbind(SOLCFHWAClass, max_pnn_prob, Downtarget,  Target_pnnanalysis_Jan0910_obj,
-                                          pnn_Upid )
-
-
-threhold_PNN <- c(0.4, 0.5, 0.6, 0.7, 0)
-
-
-
-Target_pnnanalysis_Jan0910_resultpnn_before <- table(Target_baseanalysis_Jan0910_obj  == pnn_Upid)
-
-
-max_pnn_prob <- vector()
+# second max 
+second_max_pnn_prob<-c()
 for (i in 1: length(Downpnn)){
+  n <- length(Downpnn[[i]])
   if (length(Downpnn[[i]]) > 1) {
-    max_pnn_prob[i] <- max(Downpnn[[i]][[2]][[1]])
+    second_max_pnn_prob[i] <- sort(Downpnn[[i]][[2]][[1]],partial=n-1)[n-1]
   }
   else {
-    max_pnn_prob[i] <- 999
+    second_max_pnn_prob[i] <- c(999)
   }
 }
-
-Target_pnnanalysis_Jan0910_table<- cbind(Target_pnnanalysis_Jan0910_table, max_pnn_prob)
-
-utils::View(Target_pnnanalysis_Jan0910_resultpnn_before)
-
-for (i in 1:length(Downpnn)){
-  
-  if (max_pnn_prob[i] == 999){
-    pnn_Upid_after[i] <- c(999)
-  }
-  
-  else{
-    
-    if (max_pnn_prob[i] > threhold_PNN){
-      pnn_Upid_after[i] <- pnn_Upid[i]
-    }
-    else {
-      pnn_Upid_after[i] <- c(999)
-    }
-  }
-}
-
-Target_pnnanalysis_Jan0910_table<- cbind(Target_pnnanalysis_Jan0910_table, pnn_Upid_after)
-Target_pnnanalysis_Jan0910_resultpnn_after <- table(Target_baseanalysis_Jan0910_obj == pnn_Upid_after)
-
-utils::View(Target_pnnanalysis_Jan0910_resultpnn_before)
-utils::View(Target_pnnanalysis_Jan0910_resultpnn_after)
-
-save(Target_pnnanalysis_Jan0910_table, file="./ProcessedData/Jan0910/Target_pnn_nonss_Jan0910.RData")
-write.table(Target_pnnanalysis_Jan0910_table, "./Results/Jan0910/Target_pnn_nonss_Jan0910.txt", sep="\t")
 
 
 
@@ -421,14 +420,7 @@ for (w in 1: length(candi_1)){
   }
   
 }
-# Mar20
-rm(Target_pnnanalysis2_Mar20)
-Target_pnnanalysis2_Mar20 <- (cbind(Downtarget[1:length(candi_1)], base_Upid[1:length(candi_1)], pnn_Upid[1:length(candi_1)], pnn_Upid2[1:length(candi_1)]))
-colnames(Target_pnnanalysis2_Mar20) <- c("Downid", "baseUpid", "pnnUpid", "pnnUpid2")
-Target_pnnanalysis2_Mar20<- cbind(Target_pnnanalysis2_Mar20, IrvineMarFHWAClass)
 
-Target_pnnanalysis2_Mar20_resultpnn2 <- table(Target_baseanalysis_Mar20_obj  == pnn_Upid2)
-Target_pnnanalysis2_Mar20_table2 <- cbind(Target_pnnanalysis2_Mar20, Target_baseanalysis_Mar20_obj)
 
 max_pnn_prob2 <- vector()
 for (i in 1: length(Downpnn2)){
@@ -441,96 +433,131 @@ for (i in 1: length(Downpnn2)){
   
 }
 
-Target_pnnanalysis2_Mar20_table2 <- cbind(Target_pnnanalysis2_Mar20_table2, max_pnn_prob2)
+# second max 
+second_max_pnn_prob2 <- vector()
+for (i in 1: length(Downpnn2)){
+  n <- length(Downpnn2[[i]])
+  if (length(Downpnn2[[i]]) > 1) {
+    second_max_pnn_prob2[i] <- sort(Downpnn2[[i]][[2]][[1]],partial=n-1)[n-1]
+  }
+  else {
+    second_max_pnn_prob2[i] <- c(999)
+  }
+}
 
-utils::View(Target_pnnanalysis2_Mar20_resultpnn2)
 
-save(Target_pnnanalysis2_Mar20_table2, file="./ProcessedData/SensitivityAnalysis/Target_pnn2_tw10_1_Mar20.RData")
-write.table(Target_pnnanalysis2_Mar20_table2, "./ProcessedData/SensitivityAnalysis/Target_pnn2_tw10_1_Mar20.txt", sep="\t")
+
 
 # Jan 0910
-threhold_NN <- 20 # 30, 40, 50, 60, 70 
-threhold_PNN2 <- 0.4 # 0.5, 0.6, 0.7
+rm(Result_PNN, Result, Target_pnnanalysis_Jan0910_table )
+SOLCAllFHWAClass <- read.table("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/RawData/LCJan/LCJan_v1.txt", fill=T)
+SOLCFHWAClass <- SOLCAllFHWAClass[,6] [match (Downtarget, SOLCAllFHWAClass[,3])] 
 
-Target_pnnanalysis2_Jan0910 <- (cbind(Downtarget[1:length(candi_1)], base_Upid[1:length(candi_1)],  pnn_Upid[1:length(candi_1)], pnn_Upid2[1:length(candi_1)]))
-colnames(Target_pnnanalysis2_Jan0910) <- c("Downid", "baseUpid", "pnnUpid", "pnnUpid2")
-Target_pnnanalysis2_Jan0910<- cbind(Target_pnnanalysis2_Jan0910, SOLCFHWAClass)
 
-Target_pnnanalysis2_Jan0910_resultpnn2_before <- table(Target_baseanalysis_Jan0910_obj  == pnn_Upid2)
-Target_pnnanalysis2_Jan0910_table2 <- cbind(Target_pnnanalysis2_Jan0910, Target_baseanalysis_Jan0910_obj)
+Target_pnnanalysis_Jan0910_obj  <-Target_baseanalysis_Jan0910_obj 
 
-max_pnn_prob2 <- vector()
-for (i in 1: length(Downpnn2)){
+Target_pnnanalysis_Jan0910_table <- cbind(SOLCFHWAClass, min_a_magdif, second_min_a_magdif, max_pnn_prob, max_pnn_prob2, 
+                                          second_max_pnn_prob, Downtarget, 
+                                          Target_pnnanalysis_Jan0910_obj, pnn_Upid, pnn_Upid2 )
+                                         
+
+
+threshold_PNN <- c(0, 0.2,0.3, 0.4, 0.5, 0.6, 0.7)
+Result_PNN <- data.frame()
+
+
+for (j in 1: length(threshold_PNN)) {
   
-  if (length(Downpnn2[[i]]) > 1) {
-    max_pnn_prob2[i] <- max(Downpnn2[[i]][[2]][[1]])
-  }
-  else {
-    max_pnn_prob2[i] <- 999
-  }
-  
-}
-
-Target_pnnanalysis2_Jan0910_table2 <- cbind(Target_pnnanalysis2_Jan0910_table2, max_pnn_prob2)
-
-
-pnn_Upid_after2 <-c()
-
-for (i in 1:length(Downpnn2)){
-  if (max_pnn_prob2[i] <- 999){
-    pnn_Upid_after2[i] <- c(999)
-  }
-  else {
+  for (i in 1:length(max_pnn_prob)){
     
-    if (min_a_basemagdif[i] < threhold_NN) {
+    if (max_pnn_prob[i] != c(999)){
       
-      if (max_pnn_prob2[i] > threhold_PNN2){
-        pnn_Upid_after2[i] <- pnn_Upid2[i]
-      }
-      else {
-        pnn_Upid_after2[i] <- c(999)
-      }
+        
+        if (max_pnn_prob[i] >= threshold_PNN[j]){
+          pnn_Upid_after[i] <- pnn_Upid[i]
+        }
+        else {
+          pnn_Upid_after[i] <- c(999)
+        }
+    }
+    
+    else {
+      pnn_Upid_after[i] <- c(999)
+    }
+    
+  }
+  
+  
+  for (k in 1:length(max_pnn_prob2)){
+    
+    if (max_pnn_prob2[k] != c(999)){
+                  
+          if (max_pnn_prob2[k] > threshold_PNN[j]){
+            pnn_Upid_after2[k] <- pnn_Upid2[k]
+          }
+          else {
+            pnn_Upid_after2[k] <- c(999)
+          }
     }
     else{
-      pnn_Upid_after2[i] <- c(999)
+            
+            if (max_pnn_prob[k] != c(999) ){
+                pnn_Upid_after2[k] <- pnn_Upid[k]
+            }
+            
+            else {
+              pnn_Upid_after2[k] <- c(999)
+            }
     }
   }
+  
+  Target_pnnanalysis_Jan0910_table <- cbind ( Target_pnnanalysis_Jan0910_table, pnn_Upid_after, pnn_Upid_after2 )
+  
+  
+  # result
+#   missing_nonthreshold <- length(subset(Target_pnnanalysis_Jan0910_table[,7], pnn_Upid !=Target_pnnanalysis_Jan0910_obj))
+#   matching_nonthreshold <- length(subset(Target_pnnanalysis_Jan0910_table[,7], pnn_Upid ==Target_pnnanalysis_Jan0910_obj))
+#   cmr_matching_nonthreshold <- matching_nonthreshold / (matching_nonthreshold+missing_nonthreshold  )
+  
+  missing_obj <- length (Target_pnnanalysis_Jan0910_obj[is.na(Target_pnnanalysis_Jan0910_obj)]) 
+  matching_obj <- length(Target_pnnanalysis_Jan0910_obj) - missing_obj
+  
+  matching_PNN0 <-table(Target_pnnanalysis_Jan0910_obj == pnn_Upid)["TRUE"]
+  missing_PNN0 <- table(pnn_Upid_after == c(999))["TRUE"]
+
+  matching_PNN <-table(Target_pnnanalysis_Jan0910_obj == pnn_Upid_after)["TRUE"]
+  missing_PNN <- table(pnn_Upid_after == c(999))["TRUE"]
+  
+  matching_PNN2 <-table(Target_pnnanalysis_Jan0910_obj == pnn_Upid_after2)["TRUE"]
+  missing_PNN2 <- table(pnn_Upid_after2 == c(999))["TRUE"]
+  
+  cmr_matching <- 1 - (abs (matching_PNN - matching_obj )/ matching_obj)
+  cmr_missing <-  1 - (abs(missing_PNN - missing_obj) / missing_obj)
+  
+  cmr_matching2 <- 1 - (abs (matching_PNN2 - matching_obj )/ matching_obj)
+  cmr_missing2 <-  1 - (abs(missing_PNN2 - missing_obj) / missing_obj)
+  
+  Result <- data.frame(threshold_PNN[j],  matching_obj[1], missing_obj[1],matching_PNN0[1],  missing_PNN0[1],
+                       matching_PNN[1],  missing_PNN[1], matching_PNN2[1],
+                       missing_PNN2[1], cmr_matching[1], cmr_missing[1], cmr_matching2[1], cmr_missing2[1])
+                        
+  Result_PNN <- rbind(Result_PNN, Result)
 }
 
-Target_pnnanalysis2_Jan0910_table2<- cbind(Target_pnnanalysis2_Jan0910_table2, pnn_Upid_after2)
-Target_pnnanalysis2_Jan0910_resultpnn2_after <- table(Target_baseanalysis_Jan0910_obj == pnn_Upid_after2)
-
-utils::View(Target_pnnanalysis2_Jan0910_resultpnn2_before)
-utils::View(Target_pnnanalysis2_Jan0910_resultpnn2_after)
 
 
+colnames(Result_PNN) <- c("threshold", "matching_obj", "missing_obj",   "matching_PNN_B", "missing_PNN_B", "matching_PNN", "missing_PNN",
+                          "matching_PNN2", "missing_PNN2", "cmr_matching", "cmr_missing", "cmr_matching2", "cmr_missing2")
 
-save(Target_pnnanalysis2_Jan0910_table2, file="./ProcessedData/Jan0910/Target_pnn2_nonss_Jan0910.RData")
-write.table(Target_pnnanalysis2_Jan0910_table2, "./ProcessedData/Jan0910/Target_pnn2_nonss_Jan0910.txt", sep="\t")
+                        
+utils::View(Result_PNN)
 
+save(Target_pnnanalysis_Jan0910_table, file="./ProcessedData/Jan0910/Target_pnn_Jan0910.RData")
+write.table(Target_pnnanalysis_Jan0910_table, "./ProcessedData/Jan0910/Target_pnn_Jan0910.txt", sep="\t")
+write.table(Result_PNN, "./ProcessedData/Jan0910/Result_PNN.txt", sep="\t")
 
+#####################################################################################end
 
-# save
-save.image("./ProcessedData/SensitivityAnalysis/FindTarget_tw30_1_Mar20.RData") # sensitivity
+write.table(Upheader_new, "./ProcessedData/Jan0910/Upheader_new.txt", sep="\t")
+write.table(Downheader_new, "./ProcessedData/Jan0910/Downheader_new.txt", sep="\t")
 
-save.image("./ProcessedData/Jan0910/FindTarget_Jan0910_nonss.RData") # Jan
-####################################################################################################### end
-
-
-
-##########################
-## find threshold
-min_a_magdif<-vector()
-for (i in 1: length(a_magdif)){
-  min_a_magdif[i] <- min(a_magdif[[i]])
-}
-View(min_a_magdif)
-
-max_pnn_prob <- vector()
-for (i in 1: length(Downpnn)){
-  if (length(Downpnn[[i]]) > 1) {
-    max_pnn_prob[i] <- max(Downpnn[[i]][[2]][[1]])
-  }
-}
-
-View(max_pnn_prob)

@@ -1,26 +1,28 @@
-
 utils:::menuInstallPkgs() 
 rm(list=ls())
 # load functonbook2
 library(pnn)
-setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine") 
+setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid") 
 
 
 # load Oct 02
-load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/Oct02/shiftandstretch_Oct02.RData")
-load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/Oct02/wimobjout1_Oct02.RData")
-wimobjout<-wimobjout1
+ load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Oct02/shiftandstretch_Oct02.RData")
+# load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Oct02/wimobjout1_Oct02.RData")
+# wimobjout<-wimobjout1
 
 # load Mar 20
-load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/Mar20/shiftandstretch_Mar20.RData")
+ load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Mar20/shiftandstretch_Mar20.RData")
 
-#load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/Mar20/Target_base_Mar20.RData")
-#load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/Mar20/wimobjout_Mar20.RData")
+load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/SensitivityAnalysis/shiftandstretch_Mar20_ta30.RData")
+load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/SensitivityAnalysis/wimobjout_tw1.RData")
+
+#load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Mar20/Target_base_Mar20.RData")
+#load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Mar20/wimobjout_Mar20.RData")
 #load("./ wimobjout1_Mar20.RData")
 
 # load Jan0910
-load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/Jan0910/shiftandstretch_Jan0910.RData")
-laod("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/ProcessedData/Jan0910/wimobjout_Jan0910.RData")
+load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/shiftandstretch_Jan0910.RData")
+laod("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/wimobjout_Jan0910.RData")
 
 # seqlevel50 <- 50
 # seqlevel10 <- 10
@@ -35,11 +37,12 @@ for (i in 1: length(a_magdif)){
   min_a_magdif[i] <- min(a_magdif[[i]])
 }
 
+second_min_a_magdif <- c()
 # second min
 for (i in 1: length(a_magdif)){
-  n <- length(a_magdif[i])
-  if n > 1 {
-    second_min_a_magdif[i] <- sort(a_magdif,partial=n-1)[n-1]
+  n <- length(a_magdif[[i]])
+  if (n > 1) {
+    second_min_a_magdif[i] <- sort(a_magdif[[i]], partial=n-1)[n-1]
   }
   else {
     second_min_a_magdif[i] <- c(999)
@@ -47,14 +50,15 @@ for (i in 1: length(a_magdif)){
 }
 
 min_a_basemagdif<-vector()
-for (i in 1: length(a_magdif)){
+for (i in 1: length(a_basemagdif)){
   min_a_basemagdif[i] <- min(a_basemagdif[[i]])
 }
 
+second_min_a_basemagdif <- c()
 for (i in 1: length(a_basemagdif)){
-  n <- length(a_basemagdif[i])
-  if n > 1 {
-    second_min_a_basemagdif[i] <- sort(a_basemagdif,partial=n-1)[n-1]
+  n <- length(a_basemagdif[[i]])
+  if (n > 1) {
+    second_min_a_basemagdif[i] <- sort(a_basemagdif[[i]],partial=n-1)[n-1]
   }
   else {
     second_min_a_basemagdif[i] <- c(999)
@@ -96,23 +100,44 @@ wimtarget=wimtarget[1:length(candi_1)]
 
 Target_baseanalysis_Oct02 <- (cbind(wimtarget, base_vdsid, ss_vdsid))
 colnames(Target_baseanalysis_Oct02) <- c("wimid", "basevdsid", "ssvdsid")
+
+siglink_Oct02 <- subset (siglink, substr(siglink[,1],3,12) > 1349161200 & substr(siglink[,1],3,12) < 1349247600 )
+wimsiglink_Oct02 <- subset (wimsiglink, substr(wimsiglink[,1],3,12) > 1349161200 & substr(wimsiglink[,1],3,12) < 1349247600 )
+matching_Oct02 = merge (siglink_Oct02, wimsiglink_Oct02, by="vehid")
+
+
 Target_baseanalysis_Oct02_obj  <- (matching_Oct02$sigid  [ match ( wimtarget,matching_Oct02$wimsigid )])
 Target_baseanalysis_Oct02_table <- cbind(Target_baseanalysis_Oct02, Target_baseanalysis_Oct02_obj)
 
-Target_baseanalysis_Oct02_table<- cbind(Target_baseanalysis_Oct02_table, min_a_basemagdif, min_a_magdif, second_min_a_magdif, second_min_a_basemagdif )
 
-IrvineAllFHWAClass <- read.table("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/RawData/IrvineAllFHWAClass.txt", fill=T)
+
+IrvineAllFHWAClass <- read.table("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/RawData/IrvineAllFHWAClass.txt", fill=T)
 IrvineOctFHWAClass <- IrvineAllFHWAClass[,6] [match (wimtarget, IrvineAllFHWAClass[,3])] 
-Target_baseanalysis_Oct02_table<- cbind(Target_baseanalysis_Oct02_table, IrvineOctFHWAClass)
 
-Target_baseanalysis_Oct02_resultbase <- table(Target_baseanalysis_Oct02_obj == base_vdsid)
-Target_baseanalysis_Oct02_resultss <- table(Target_baseanalysis_Oct02_obj == ss_vdsid)
+
+Target_baseanalysis_Oct02_table<- cbind(Target_baseanalysis_Oct02_table,IrvineOctFHWAClass,
+                                        min_a_basemagdif, min_a_magdif, second_min_a_magdif, second_min_a_basemagdif )
+
+colnames(Target_baseanalysis_Oct02_table) <- c("wimid", "basevdsid", "ssvdsid",  "targetid", "FHWAclass",
+                                               "minbase", "mina", "secondminbase", "secondmina")
+
+Target_baseanalysis_Oct02_table2 <- subset(Target_baseanalysis_Oct02_table, !(is.na(Target_baseanalysis_Oct02_obj)) 
+                                          & !(is.na(IrvineOctFHWAClass)) & (IrvineOctFHWAClass > 3))
+
+
+Target_baseanalysis_Oct02_obj2 <- Target_baseanalysis_Oct02_table2[,4]
+base_vdsid2 <- Target_baseanalysis_Oct02_table2[,2]
+ss_vdsid2 <- Target_baseanalysis_Oct02_table2[,3]
+
+
+Target_baseanalysis_Oct02_resultbase <- table(Target_baseanalysis_Oct02_obj2 == base_vdsid2)
+Target_baseanalysis_Oct02_resultss <- table(Target_baseanalysis_Oct02_obj2 == ss_vdsid2)
 
 
 utils::View(Target_baseanalysis_Oct02_resultbase)
 utils::View(Target_baseanalysis_Oct02_resultss)
 
-save(Target_baseanalysis_Oct02_table, file="./ProcessedData/Oct02/Target_base_Oct02.RData")
+save(Target_baseanalysis_Oct02_table2, file="./ProcessedData/Oct02/Target_base_Oct02.RData")
 write.table(Target_baseanalysis_Oct02_table, "./ProcessedData/Oct02/Target_base_Oct02.txt", sep="\t")
 
 # Mar 20
@@ -122,40 +147,40 @@ wimtarget=wimtarget[1:length(candi_1)]
 Target_baseanalysis_Mar20 <- (cbind(wimtarget, base_vdsid, ss_vdsid))
 colnames(Target_baseanalysis_Mar20) <- c("wimid", "basevdsid", "ssvdsid")
 Target_baseanalysis_Mar20_obj  <- (matching_Mar20$sigid  [ match ( wimtarget,matching_Mar20$wimsigid )])
-Target_baseanalysis_Mar20_table <- cbind(Target_baseanalysis_Mar20, Target_baseanalysis_Mar20_obj)
 
-Target_baseanalysis_Mar20_table<- cbind(Target_baseanalysis_Mar20_table, min_a_basemagdif, min_a_magdif, second_min_a_magdif, second_min_a_basemagdif )
-
-IrvineAllFHWAClass <- read.table("C:/Users/Kate Hyun/Dropbox/Kate/ReID/DataIrvine/RawData/IrvineAllFHWAClass.txt", fill=T)
+IrvineAllFHWAClass <- read.table("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/RawData/IrvineAllFHWAClass.txt", fill=T)
 IrvineMarFHWAClass <- IrvineAllFHWAClass[,6] [match (wimtarget, IrvineAllFHWAClass[,3])] 
-Target_baseanalysis_Mar20_table<- cbind(Target_baseanalysis_Mar20_table, IrvineMarFHWAClass)
 
-Target_baseanalysis_Mar20_resultbase <- table(Target_baseanalysis_Mar20_obj == base_vdsid)
-Target_baseanalysis_Mar20_resultss <- table(Target_baseanalysis_Mar20_obj == ss_vdsid)
+
+Target_baseanalysis_Mar20_table<- cbind(Target_baseanalysis_Mar20, as.numeric(Target_baseanalysis_Mar20_obj),IrvineMarFHWAClass, min_a_basemagdif, 
+                                        min_a_magdif, second_min_a_magdif, second_min_a_basemagdif )
+
+colnames(Target_baseanalysis_Mar20_table) <- c("wimid", "basevdsid", "ssvdsid",  "targetid", "FHWAclass",
+                                              "minbase", "mina", "secondminbase", "secondmina")
+
+Target_baseanalysis_Mar20_table2 <- subset(Target_baseanalysis_Mar20_table, !(is.na(Target_baseanalysis_Mar20_obj)) 
+                                           & !(is.na(IrvineMarFHWAClass)) & IrvineMarFHWAClass > 3)
+
+
+
+
+Target_baseanalysis_Mar20_obj2 <- Target_baseanalysis_Mar20_table2[,4]
+base_vdsid2 <- Target_baseanalysis_Mar20_table2[,2]
+ss_vdsid2 <- Target_baseanalysis_Mar20_table2[,3]
+
+Target_baseanalysis_Mar20_resultbase <- table(Target_baseanalysis_Mar20_obj2 == base_vdsid2)
+Target_baseanalysis_Mar20_resultss <- table(Target_baseanalysis_Mar20_obj2 == ss_vdsid2)
 
 utils::View(Target_baseanalysis_Mar20_resultbase)
 utils::View(Target_baseanalysis_Mar20_resultss)
 
-save(Target_baseanalysis_Mar20_table, file="./ProcessedData/Mar20/Target_base_Mar20.RData")
-write.table(Target_baseanalysis_Mar20_table, "./ProcessedData/Mar20/Target_base_Mar20.txt", sep="\t")
+# save(Target_baseanalysis_Mar20_table2, file="./ProcessedData/Mar20/Target_base_Mar20.RData")
+# write.table(Target_baseanalysis_Mar20_table2, "./ProcessedData/Mar20/Target_base_Mar20.txt", sep="\t")
 
-# Jan 0910
-wimtarget=wimtarget[1:length(candi_1)]
+save(Target_baseanalysis_Mar20_table2, file="./ProcessedData/SensitivityAnalysis/Target_base_tw30.RData")
+write.table(Target_baseanalysis_Mar20_table2, "./ProcessedData/SensitivityAnalysis/Target_base_tw30.txt", sep="\t")
 
-Target_baseanalysis_Jan0910 <- (cbind(wimtarget, base_vdsid, ss_vdsid))
-colnames(Target_baseanalysis_Jan0910 ) <- c("wimid", "basevdsid", "ssvdsid")
-Target_baseanalysis_Jan0910_obj  <- (matching$SO[ match ( wimtarget, matching$LC )])
 
-Target_baseanalysis_Jan0910_table <- cbind(Target_baseanalysis_Jan0910 , Target_baseanalysis_Jan0910_obj)
-
-Target_baseanalysis_Jan0910_resultbase <- table(Target_baseanalysis_Jan0910_obj == base_vdsid)
-Target_baseanalysis_Jan0910_resultss <- table(Target_baseanalysis_Jan0910_obj == ss_vdsid)
-
-utils::View(Target_baseanalysis_Jan0910_resultbase)
-utils::View(Target_baseanalysis_Jan0910_resultss)
-
-save(Target_baseanalysis_Jan0910_table, file="./ProcessedData/Jan0910/Target_base_Jan0910.RData")
-write.table(Target_baseanalysis_Mar20_table, "./ProcessedData/Jan0910/Target_base_Jan0910 .txt", sep="\t")
 
 ### target 3 : PNN
 ############################################################################## start here when loading RData
@@ -163,10 +188,10 @@ write.table(Target_baseanalysis_Mar20_table, "./ProcessedData/Jan0910/Target_bas
 # run pnn
 Target_pnnanalysis_Oct02_resultpnn  <- table(c(0,0)) # Oct 02
 Target_pnnanalysis_Oct02_resultpnn2  <- table(c(0,0)) # Oct 02
+
 Target_pnnanalysis_Mar20_resultpnn  <- table(c(0,0)) # Mar 20
 Target_pnnanalysis_Mar20_resultpnn2  <- table(c(0,0)) # Mar 20 v2
-Target_pnnanalysis_Jan0910_resultpnn  <- table(c(0,0)) # Jan0910
-Target_pnnanalysis_Jan0910_resultpnn2  <- table(c(0,0)) # Jan0910 v2
+
 
 wimpnn <- list()
 wimpnn2 <- list()
@@ -340,15 +365,6 @@ for (w in 1: length(candi_1)){
     
 }
 
-# Oct 02
-rm(Target_pnnanalysis_Oct02,Target_pnnanalysis_Oct02_table )
-Target_pnnanalysis_Oct02 <- (cbind(wimtarget[1:length(candi_1)], base_vdsid[1:length(candi_1)],ss_vdsid[1:length(candi_1)], pnn_vdsid[1:length(candi_1)]))
-colnames(Target_pnnanalysis_Oct02) <- c("wimid", "basevdsid", "ssvdsid", "pnnvdsid")
-Target_pnnanalysis_Oct02 <- cbind(Target_pnnanalysis_Oct02, IrvineOctFHWAClass)
-
-Target_pnnanalysis_Oct02_resultpnn <- table(Target_baseanalysis_Oct02_obj  == pnn_vdsid)
-Target_pnnanalysis_Oct02 <- cbind(Target_pnnanalysis_Oct02, Target_baseanalysis_Oct02_obj)
-
 
 max_pnn_prob <- vector()
 for (i in 1: length(wimpnn)){
@@ -361,10 +377,10 @@ for (i in 1: length(wimpnn)){
   
 }
 
-
 # second max 
+second_max_pnn_prob<-c()
 for (i in 1: length(wimpnn)){
-  n <- length(wimpnn)
+  n <- length(wimpnn[[i]])
   if (length(wimpnn[[i]]) > 1) {
     second_max_pnn_prob[i] <- sort(wimpnn[[i]][[2]][[1]],partial=n-1)[n-1]
   }
@@ -373,90 +389,21 @@ for (i in 1: length(wimpnn)){
   }
 }
 
-Target_pnnanalysis_Oct02_table<- cbind(Target_pnnanalysis_Oct02, max_pnn_prob, second_max_pnn_prob)
-
-utils::View(Target_pnnanalysis_Oct02_resultpnn)
-
-save(Target_pnnanalysis_Oct02_table, file="./ProcessedData/Oct02/Target_pnn_Oct02.RData")
-#save.image("./ProcessedData/Oct02/FindTarget_Oct02.RData")
-write.table(Target_pnnanalysis_Oct02_table, "./ProcessedData/Oct02/Target_pnn_Oct02.txt", sep="\t")
-
-# Mar 20
-rm(Target_pnnanalysis_Mar20)
-Target_pnnanalysis_Mar20 <- (cbind(wimtarget[1:length(candi_1)], base_vdsid[1:length(candi_1)],ss_vdsid[1:length(candi_1)], pnn_vdsid[1:length(candi_1)]))
-colnames(Target_pnnanalysis_Mar20) <- c("wimid", "basevdsid", "ssvdsid", "pnnvdsid")
-
-Target_pnnanalysis_Mar20_resultpnn <- table(Target_baseanalysis_Mar20_obj  == pnn_vdsid)
-Target_pnnanalysis_Mar20_table <- cbind(Target_pnnanalysis_Mar20, Target_baseanalysis_Mar20_obj)
-Target_pnnanalysis_Mar20_table<- cbind(Target_pnnanalysis_Mar20_table, IrvineMarFHWAClass)
-
-max_pnn_prob <- vector()
-for (i in 1: length(wimpnn)){
-  if (length(wimpnn[[i]]) > 1) {
-    max_pnn_prob[i] <- max(wimpnn[[i]][[2]][[1]])
-  }
-  else {
-    max_pnn_prob[i] <- 999
-  }
-    
-}
-
-# second max 
-for (i in 1: length(wimpnn)){
-  n <- length(wimpnn)
-  if (length(wimpnn[[i]]) > 1) {
-    second_max_pnn_prob[i] <- sort(wimpnn[[i]][[2]][[1]],partial=n-1)[n-1]
-  }
-  else {
-    second_max_pnn_prob[i] <- c(999)
-  }
-}
-
-Target_pnnanalysis_Mar20_table <- cbind(Target_pnnanalysis_Mar20_table, max_pnn_prob, second_max_pnn_prob)
-
-utils::View(Target_pnnanalysis_Mar20_resultpnn)
-
-save(Target_pnnanalysis_Mar20_table, file="./ProcessedData/Mar20/Target_pnn_Mar20.RData")
-
-write.table(Target_pnnanalysis_Mar20_table, "./ProcessedData/Mar20/Target_pnn_Mar20.txt", sep="\t")
-
-# Jan 0910
-Target_pnnanalysis_Jan0910 <- (cbind(wimtarget[1:length(candi_1)], base_vdsid[1:length(candi_1)],ss_vdsid[1:length(candi_1)], pnn_vdsid[1:length(candi_1)]))
-colnames(Target_pnnanalysis_Jan0910) <- c("wimid", "basevdsid", "ssvdsid", "pnnvdsid")
-
-Target_pnnanalysis_Jan0910_resultpnn <- table(Target_baseanalysis_Jan0910_obj  == pnn_vdsid)
-Target_pnnanalysis_Jan0910_table <- cbind(Target_pnnanalysis_Jan0910, Target_baseanalysis_Jan0910_obj)
-
-
-utils::View(Target_pnnanalysis_Jan0910_resultpnn)
-
-save(Target_pnnanalysis_Jan0910_table, file="./ProcessedData/Jan0910/Target_pnn_Jan0910.RData")
-#save.image("./ProcessedData/Jan0910/FindTarget_Jan0910.RData")
-write.table(Target_pnnanalysis_Jan0910_table, "./Results/Jan0910/Target_pnn_Jan0910.txt", sep="\t")
 
 ### first ss and second pnn
 for (w in 1: length(candi_1)){
-#  for (w in 1: 2){
-   if (as.numeric (wimpnn2[[w]][[1]][[1]] < 998 )) {
-     
-       pnn_vdsid2[w] <- vdssiglist[[w]] [which ( as.numeric( wimpnn2[[w]][[1]][[1]] )  == find_pnn_order2[[w]])]
-   }
-   
-   else {
-     pnn_vdsid2[w] <- base_vdsid[w]
-     
-   }
-     
+  #  for (w in 1: 2){
+  if (as.numeric (wimpnn2[[w]][[1]][[1]] < 998 )) {
+    
+    pnn_vdsid2[w] <- vdssiglist[[w]] [which ( as.numeric( wimpnn2[[w]][[1]][[1]] )  == find_pnn_order2[[w]])]
+  }
+  
+  else {
+    pnn_vdsid2[w] <- base_vdsid[w]
+    
+  }
+  
 }
-# OCt 02
-rm(Target_pnnanalysis2_Oct02)
-Target_pnnanalysis2_Oct02 <- (cbind(wimtarget[1:length(candi_1)], base_vdsid[1:length(candi_1)], ss_vdsid[1:length(candi_1)], pnn_vdsid[1:length(candi_1)], pnn_vdsid2[1:length(candi_1)]))
-colnames(Target_pnnanalysis2_Oct02) <- c("wimid", "basevdsid", "ssvdsid", "pnnvdsid", "pnnvdsid2")
-Target_pnnanalysis2_Oct02<- cbind(Target_pnnanalysis2_Oct02, IrvineOctFHWAClass)
-
-Target_pnnanalysis2_Oct02_resultpnn2 <- table(Target_baseanalysis_Oct02_obj  == pnn_vdsid2)
-
-Target_pnnanalysis2_Oct02_table2 <- cbind(Target_pnnanalysis2_Oct02, Target_baseanalysis_Oct02_obj)
 
 max_pnn_prob2 <- vector()
 for (i in 1: length(wimpnn2)){
@@ -469,9 +416,12 @@ for (i in 1: length(wimpnn2)){
   
 }
 
+
+
 # second max 
+second_max_pnn_prob2 <- vector()
 for (i in 1: length(wimpnn2)){
-  n <- length(wimpnn2)
+  n <- length(wimpnn2[[i]])
   if (length(wimpnn2[[i]]) > 1) {
     second_max_pnn_prob2[i] <- sort(wimpnn2[[i]][[2]][[1]],partial=n-1)[n-1]
   }
@@ -480,71 +430,71 @@ for (i in 1: length(wimpnn2)){
   }
 }
 
-Target_pnnanalysis2_Oct02_table2 <- cbind(Target_pnnanalysis2_Oct02_table2, max_pnn_prob2, second_max_pnn_prob2)
 
-utils::View(Target_pnnanalysis2_Oct02_resultpnn2)
+# Oct 02
+rm(Target_pnnanalysis_Oct02, Target_pnnanalysis_Oct02_table)
+Target_pnnanalysis_Oct02 <- (cbind(wimtarget[1:length(candi_1)], base_vdsid[1:length(candi_1)], ss_vdsid[1:length(candi_1)],
+                                   pnn_vdsid[1:length(candi_1)], pnn_vdsid2[1:length(candi_1)]))
+colnames(Target_pnnanalysis_Oct02) <- c("wimid", "basevdsid", "ssvdsid", "pnnvdsid", "pnn2vdsid")
+Target_pnnanalysis_Oct02_table <- cbind(Target_pnnanalysis_Oct02, Target_baseanalysis_Oct02_obj, IrvineOctFHWAClass, 
+                                        max_pnn_prob, second_max_pnn_prob, max_pnn_prob2, second_max_pnn_prob2)
+                                        
 
-save(Target_pnnanalysis2_Oct02_table2, file="./ProcessedData/Oct02/Target_pnn2_Oct02.RData")
+colnames(Target_pnnanalysis_Oct02_table) <- c("wimid", "basevdsid", "ssvdsid", "pnnvdsid", "pnn2vdsid", "targetid", "FHWAclass",
+                                              "maxprob", "secondmaxprob", "maxprob2", "secondmaxprob2")
 
-write.table(Target_pnnanalysis2_Oct02_table2, "./ProcessedData/Oct02/Target_pnn2_Oct02.txt", sep="\t")
+Target_pnnanalysis_Oct02_table2 <- subset(Target_pnnanalysis_Oct02_table, !(is.na(Target_baseanalysis_Oct02_obj)) 
+                                          & !(is.na(IrvineOctFHWAClass)) & (IrvineOctFHWAClass > 3))
+
+Target_pnnanalysis_Oct02_obj2 <- Target_pnnanalysis_Oct02_table2[,6]
+pnnvdsid2 <- Target_pnnanalysis_Oct02_table2[,4]
+pnn2vdsid2 <- Target_pnnanalysis_Oct02_table2[,5]
+
+Target_pnnanalysis_Oct02_resultpnn <- table(Target_pnnanalysis_Oct02_obj2  == pnnvdsid2)
+Target_pnnanalysis_Oct02_resultpnn2 <- table(Target_pnnanalysis_Oct02_obj2  == pnn2vdsid2)
+
+utils::View(Target_pnnanalysis_Oct02_resultpnn )
+utils::View(Target_pnnanalysis_Oct02_resultpnn2 )
+
+save(Target_pnnanalysis_Oct02_table2, file="./ProcessedData/Oct02/Target_pnn_Oct02.RData")
+write.table(Target_pnnanalysis_Oct02_table2, "./ProcessedData/Oct02/Target_pnn_Oct02.txt", sep="\t")
 
 # Mar 20
-rm(Target_pnnanalysis2_Mar20)
-Target_pnnanalysis2_Mar20 <- (cbind(wimtarget[1:length(candi_1)], base_vdsid[1:length(candi_1)], ss_vdsid[1:length(candi_1)], pnn_vdsid[1:length(candi_1)], pnn_vdsid2[1:length(candi_1)]))
-colnames(Target_pnnanalysis2_Mar20) <- c("wimid", "basevdsid", "ssvdsid", "pnnvdsid", "pnnvdsid2")
-Target_pnnanalysis2_Mar20 <- cbind(Target_pnnanalysis2_Mar20, IrvineMarFHWAClass)
+rm(Target_pnnanalysis_Mar20)
+Target_pnnanalysis_Mar20 <- (cbind(wimtarget[1:length(candi_1)], base_vdsid[1:length(candi_1)], ss_vdsid[1:length(candi_1)], pnn_vdsid[1:length(candi_1)], pnn_vdsid2[1:length(candi_1)]))
+colnames(Target_pnnanalysis_Mar20) <- c("wimid", "basevdsid", "ssvdsid", "pnnvdsid", "pnn2vdsid")
+Target_pnnanalysis_Mar20_table <- cbind(Target_pnnanalysis_Mar20, Target_baseanalysis_Mar20_obj, IrvineMarFHWAClass, max_pnn_prob,
+                              second_max_pnn_prob, max_pnn_prob2, second_max_pnn_prob2)
 
-Target_pnnanalysis2_Mar20_resultpnn2 <- table(Target_baseanalysis_Mar20_obj  == pnn_vdsid2)
-Target_pnnanalysis2_Mar20_table2 <- cbind(Target_pnnanalysis2_Mar20, Target_baseanalysis_Mar20_obj)
+colnames(Target_pnnanalysis_Mar20_table) <- c("wimid", "basevdsid", "ssvdsid", "pnnvdsid", "pnn2vdsid", "targetid", "FHWAclass",
+                                              "maxprob", "secondmaxprob", "maxprob2", "secondmaxprob2")
 
-max_pnn_prob2 <- vector()
-for (i in 1: length(wimpnn2)){
-  if (length(wimpnn2[[i]]) > 1) {
-    max_pnn_prob2[i] <- max(wimpnn2[[i]][[2]][[1]])
-  }
-  else {
-    max_pnn_prob2[i] <- 999
-  }
-  
-}
+Target_pnnanalysis_Mar20_table2 <- subset(Target_pnnanalysis_Mar20_table, !(is.na(Target_baseanalysis_Mar20_obj)) 
+                                           & !(is.na(IrvineMarFHWAClass)) & (IrvineMarFHWAClass > 3))
 
-# second max 
-for (i in 1: length(wimpnn2)){
-  n <- length(wimpnn2)
-  if (length(wimpnn2[[i]]) > 1) {
-    second_max_pnn_prob2[i] <- sort(wimpnn2[[i]][[2]][[1]],partial=n-1)[n-1]
-  }
-  else {
-    second_max_pnn_prob2[i] <- c(999)
-  }
-}
+Target_pnnanalysis_Mar20_obj2 <- Target_pnnanalysis_Mar20_table2[,6]
+pnnvdsid2 <- Target_pnnanalysis_Mar20_table2[,4]
+pnn2vdsid2 <- Target_pnnanalysis_Mar20_table2[,5]
 
-Target_pnnanalysis2_Mar20_table2 <- cbind(Target_pnnanalysis2_Mar20_table2, max_pnn_prob2, second_max_pnn_prob2)
-utils::View(Target_pnnanalysis2_Mar20_resultpnn2)
+Target_pnnanalysis_Mar20_resultpnn <- table(Target_pnnanalysis_Mar20_obj2  == pnnvdsid2)
+Target_pnnanalysis_Mar20_resultpnn2 <- table(Target_pnnanalysis_Mar20_obj2  == pnn2vdsid2)
 
-save(Target_pnnanalysis2_Mar20_table2, file="./ProcessedData/Mar20/Target_pnn2_Mar20.RData")
+utils::View(Target_pnnanalysis_Mar20_resultpnn )
+utils::View(Target_pnnanalysis_Mar20_resultpnn2 )
 
-write.table(Target_pnnanalysis2_Mar20_table2, "./ProcessedData/Mar20/Target_pnn2_Mar20.txt", sep="\t")
+# save(Target_pnnanalysis_Mar20_table2, file="./ProcessedData/Mar20/Target_pnn_Mar20.RData")
+# write.table(Target_pnnanalysis_Mar20_table2, "./ProcessedData/Mar20/Target_pnn_Mar20.txt", sep="\t")
+
+save(Target_pnnanalysis_Mar20_table2, file="./ProcessedData/SensitivityAnalysis/Target_pnn_tw30.RData")
+write.table(Target_pnnanalysis_Mar20_table2, "./ProcessedData/SensitivityAnalysis/Target_pnn_tw30.txt", sep="\t")
 
 
-# Jan 0910
-Target_pnnanalysis2_Jan0910 <- (cbind(wimtarget[1:length(candi_1)], base_vdsid[1:length(candi_1)], ss_vdsid[1:length(candi_1)], pnn_vdsid[1:length(candi_1)], pnn_vdsid2[1:length(candi_1)]))
-colnames(Target_pnnanalysis2_Jan0910) <- c("wimid", "basevdsid", "ssvdsid", "pnnvdsid", "pnnvdsid2")
-
-Target_pnnanalysis2_Jan0910_resultpnn2 <- table(Target_baseanalysis_Jan0910_obj  == pnn_vdsid2)
-Target_pnnanalysis2_Jan0910_table2 <- cbind(Target_pnnanalysis2_Jan0910, Target_baseanalysis_Jan0910_obj)
-
-
-utils::View(Target_pnnanalysis2_Jan0910_resultpnn2)
-
-save(Target_pnnanalysis2_Jan0910_table2, file="./ProcessedData/Jan0910/Target_pnn2_Jan0910.RData")
-write.table(Target_pnnanalysis2_Jan0910_table2, "./ProcessedData/Jan0910/Target_pnn2_Jan0910.txt", sep="\t")
 
 
 # save
 save.image("./ProcessedData/Oct02/FindTarget_Oct02.RData")
 save.image("./ProcessedData/Mar20/FindTarget_Mar20.RData")
-save.image("./ProcessedData/Jan0910/FindTarget_Jan0910.RData")
+
 ####################################################################################################### end
 ## find threshold
 min_a_magdif<-vector()
