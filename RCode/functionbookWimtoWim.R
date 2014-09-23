@@ -120,6 +120,61 @@ f.stret <- function (insig, splineDown, stret_coeff, num, no_round ){
 }
 
 
+f.ResultNN <- function (threshold_NN,  TargetTable, p ){
+
+a_magdif <- as.numeric(TargetTable[,3]  )
+Target_obj <- TargetTable[,5]
+Target_obj2 <- TargetTable[,6]
+
+for (j in 1: length(threshold_NN)) {
+
+  
+  
+  for (i in 1:length( TargetTable[,1])){
+    
+    if (a_magdif[i] < threshold_NN[j]){
+      a_Upid_after[i] <- TargetTable[i,8]
+    }
+    else {
+      a_Upid_after[i] <- c(999)
+    }
+    
+  }
+  
+  TargetTable <- cbind ( TargetTable, a_Upid_after )
+  
+  missing_obj <- length (Target_obj[is.na(Target_obj)]) 
+  matching_obj <- length (Target_obj[!is.na(Target_obj)]) 
+  
+  matching_NN <-table( Target_obj == a_Upid_after)["TRUE"]
+  missing_NN <- table(a_Upid_after == c(999))["TRUE"]
+  
+  
+  CMVeh <-  matching_NN[1]
+  CVeh <- matching_obj[1]
+  MVeh <- sum(   (as.numeric( TargetTable[,p])) > 1000 )  
+  
+  
+  SIMR <- CMVeh / CVeh
+  SCMR <- CMVeh / MVeh
+  
+  MMVeh <- length(  subset(TargetTable[,1], as.numeric( Target_obj2 ) 
+                           !=  as.numeric( TargetTable[,p])   ))
+  
+  p <- p+1
+  Veh <- length(TargetTable[,1])
+  SER <- MMVeh / Veh
+  
+  Result <- data.frame(threshold_NN[j], matching_obj[1], missing_obj[1],              
+                       matching_NN[[1]],  missing_NN[[1]],
+                       CMVeh[[1]], CVeh[[1]], MVeh[[1]], SIMR[[1]], SCMR[[1]], MMVeh[[1]], Veh[[1]], SER[[1]] )
+  
+  Result_NN <- rbind(Result_NN, Result)
+}
+
+return (list(resultnn =Result_NN, tt = TargetTable))
+}
+
 
 
 ### draw signature
@@ -161,12 +216,10 @@ f.Updraw <- function (sigid){
   
   insig <- match(sigid, Upheader_new$sigid)
   
-  
   time <- seq(from= 0, to= 1, by = 1/(num-1))
   insig_time <- time
   insig_mag <- Upobjout[insig,]
-  
-  
+    
   sigplot <- plot(insig_time, insig_mag, main=paste("Target (Upstream)", sigid[1]))
   return (sigplot)
 }
@@ -214,8 +267,26 @@ f.UpdrawAfterSS <- function (n1, n2){
   return (sigplot)
 }
 
+f.ErrorDraw <- function ( Upsigid, Downsigid ) {
+  
+  
+    Downinsig <- match(Downsigid, Downheader_new$sigid)
+    Upinsig <- match(Upsigid, Upheader_new$sigid)
+    
+    
+    time <- seq(from= 0, to= 1, by = 1/(num-1))
+    insig_time <- time
+    
+    insig_mag <- abs ( Downobjout[Downinsig,] - Upobjout[Upinsig,] )
+    
+    
+    sigplot <- plot(insig_time, insig_mag, main=paste("Error", Downsigid[1] , Upsigid[1]))
+    
+    return (sigplot)
+  
+}
 
-
+  
 f.pnn <- function ( nn, Downobjout1){
   
   cat <- list()

@@ -44,16 +44,16 @@ Upheader[,18] <- SOJan_v1[,11][match( Upheader$sigid, SOJan_v1[,3])] # axle spac
 Upheader[,19] <- SOJan_v1[,12][match( Upheader$sigid, SOJan_v1[,3])] # axle spacing 3-4
 Upheader[,20] <- SOJan_v1[,13][match( Upheader$sigid, SOJan_v1[,3])] # axle spacing 4-5
 
-Upheader[,21] <- SOJan_v1[,14][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 1 left
-Upheader[,22] <- SOJan_v1[,15][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 1 right
-Upheader[,23] <- SOJan_v1[,16][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 2 left
-Upheader[,24] <- SOJan_v1[,17][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 2 right
-Upheader[,25] <- SOJan_v1[,18][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 3 left
-Upheader[,26] <- SOJan_v1[,19][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 3 right
-Upheader[,27] <- SOJan_v1[,20][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 4 left
-Upheader[,28] <- SOJan_v1[,21][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 4 right
-Upheader[,29] <- SOJan_v1[,22][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 5 left
-Upheader[,30] <- SOJan_v1[,23][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 5 right
+# Upheader[,21] <- SOJan_v1[,14][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 1 left
+# Upheader[,22] <- SOJan_v1[,15][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 1 right
+# Upheader[,23] <- SOJan_v1[,16][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 2 left
+# Upheader[,24] <- SOJan_v1[,17][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 2 right
+# Upheader[,25] <- SOJan_v1[,18][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 3 left
+# Upheader[,26] <- SOJan_v1[,19][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 3 right
+# Upheader[,27] <- SOJan_v1[,20][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 4 left
+# Upheader[,28] <- SOJan_v1[,21][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 4 right
+# Upheader[,29] <- SOJan_v1[,22][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 5 left
+# Upheader[,30] <- SOJan_v1[,23][match( Upheader$sigid, SOJan_v1[,3])] # axle weight 5 right
 
 Upheader_new <-subset(Upheader, Upheader[,8] > 100)
 Upheader_new <-subset(Upheader_new, Upheader_new[,14] > 3)
@@ -344,7 +344,7 @@ for (w in 1: length(Upidx)){
 
 
 
-save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/08062014Jan0910.RData")  # for Jan 0910
+save.image("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/08082014Jan0910.RData")  # for Jan 0910
 
 
 save(Upobjout, file="./ProcessedData/Jan0910/Upobjout.RData")
@@ -358,7 +358,7 @@ rm(la12, la23, la34, la45, lb, ld, lg, ll, lp, lwl1, lwl2, lwl3, lwl4, lwl5, lwr
 
 rm(setaspacing12, setaspacing23, setaspacing34, setaspacing45, setaweightl1, setaweightl2, setaweightl3,
    setaweightl4, setaweightl5, setaweightr1, setaweightr2, setaweightr3, setaweightr4, setaweightr5,
-   setduration, setgvw, setnumpnt, settime, setlen)
+   setduration, setgvw, setnumpnt, settime, setlen, uctJan09, uctJan10)
 
 rm(LC.Jan09ML3Header1, LC.Jan09ML3Header2, LC.Jan09ML3sig1, LC.Jan09ML3sig2, 
    LC.Jan09ML4Header1, LC.Jan09ML4Header2, LC.Jan09ML4sig1, LC.Jan09ML4sig2, 

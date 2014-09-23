@@ -3,7 +3,7 @@
 #library(plyr)
 #rm(list=ls())
 
-load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/08062014Jan0910.RData") 
+load("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/08082014Jan0910.RData") 
 
 #setwd("C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid") 
 #setwd("C:/Users/Kyung Hyun/Dropbox/Kate/ReID/TruckReid") 
