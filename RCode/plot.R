@@ -14,10 +14,16 @@ Upplot <- f.drawUpsignature (n1,n2)
 
 
 
-Downsigid <- 531357856070451
+Downsigid <-531357854229659
 Downplot <- f.Downdraw (Downsigid)
-Upsigid <- 941357854658197
+
+Upsigid <- 931357852168065
 Upplot <- f.Updraw (Upsigid)
+Errorplot <- f.ErrorDraw ( Upsigid, Downsigid ) 
+
+Upsigid <-931357851573677
+Upplot <- f.Updraw (Upsigid)
+Errorplot <- f.ErrorDraw ( Upsigid, Downsigid ) 
 
 
 jpeg( paste("Error", Downsigid[1] , Upsigid[1], ".jpeg"));
@@ -33,3 +39,11 @@ UpplotAfterSS <- f.UpdrawAfterSS(n1,n2)
 Upsigid <- 941357775815254
 Downsigid <- 531357777730247
 Errorplot <- f.ErrorDraw ( Upsigid, Downsigid ) 
+
+library(pracma)
+trapz(Errorplot,0)
+require(pracma)
+
+
+require(MESS)
+auc(Errorplot, 0)

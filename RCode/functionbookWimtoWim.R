@@ -133,10 +133,10 @@ for (j in 1: length(threshold_NN)) {
   for (i in 1:length( TargetTable[,1])){
     
     if (a_magdif[i] < threshold_NN[j]){
-      a_Upid_after[i] <- TargetTable[i,8]
+      a_Upid_after[i] <- as.numeric(TargetTable[i,8])
     }
     else {
-      a_Upid_after[i] <- c(999)
+      a_Upid_after[i] <- as.numeric(c(999))
     }
     
   }
@@ -175,6 +175,18 @@ for (j in 1: length(threshold_NN)) {
 return (list(resultnn =Result_NN, tt = TargetTable))
 }
 
+f.ErrorMag <- function( Upsigid, Downsigid){
+  
+  time <- seq(from= 0, to= 1, by = 1/(num-1))
+  insig_time <- time
+  
+  Downinsig <- match(Downsigid, Downheader_new$sigid)
+  Upinsig <- match(Upsigid, Upheader_new$sigid)
+  insig_mag <- abs ( Downobjout[Downinsig,] - Upobjout[Upinsig,] )
+  
+  errormag <- c(Downsigid, Upsigid,999, insig_mag)
+  return (errormag)
+}
 
 
 ### draw signature
@@ -285,6 +297,8 @@ f.ErrorDraw <- function ( Upsigid, Downsigid ) {
     return (sigplot)
   
 }
+
+
 
   
 f.pnn <- function ( nn, Downobjout1){

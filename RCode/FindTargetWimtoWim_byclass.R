@@ -1,4 +1,4 @@
-#utils:::menuInstallPkgs() 
+# utils:::menuInstallPkgs() 
 #rm(list=ls())
 # load functonbook2
 library(pnn)
@@ -76,7 +76,7 @@ for (i in 1:length(a_magdif)){
 # Jan 0910
 p <- 7
 rm(Target_baseanalysis_Jan0910_table, Result_NN, Result)
-Target_baseanalysis_Jan0910_obj2 <- rep(NA, length(a_Upid))
+Target_baseanalysis_Jan0910_obj2 <- rep(999, length(a_Upid))
 
 Downtarget <- Downheader_ID
 
@@ -91,14 +91,15 @@ Target_baseanalysis_Jan0910_obj2 <- Target_baseanalysis_Jan0910_obj
 Target_baseanalysis_Jan0910_obj2[is.na ( Target_baseanalysis_Jan0910_obj2)]  <- c(999)
 
 
-
 Target_baseanalysis_Jan0910_table <- cbind(SOLCFHWAClass,min_a_basemagdif,min_a_magdif, 
                                             Downtarget,  Target_baseanalysis_Jan0910_obj, 
                                            Target_baseanalysis_Jan0910_obj2, base_Upid, a_Upid )
 
+mode(Target_baseanalysis_Jan0910_table) <- "numeric"
+
 # start from here  - by Class
 threshold_NN<- seq(from = 20, to = 80, by = 1) 
-Result_NN <- data.frame()
+Result_NN <-data.frame()
 
 
 Class <- sort(unique(Target_baseanalysis_Jan0910_table[,1]))
@@ -113,14 +114,19 @@ for (z in 1: length(Class)){
   TargetTable <- subset(Target_baseanalysis_Jan0910_table, Target_baseanalysis_Jan0910_table[,1] == Class[z])
   classresult <- f.ResultNN (threshold_NN,  TargetTable, p )
   assign(paste("Result_NN",Class[z],sep=""), classresult$resultnn)
-  assign(paste("TargetTable",Class[z], sep=""),classresult$tt) 
-  write.table(TargetTable, paste("TargetTable",Class[z], (".txt"), sep=""), sep="\t")
-  write.table(classresult$resultnn, paste("Result_NN",Class[z], (".txt"), sep=""), sep="\t")
+  assign(paste("TargetTable",Class[z], sep=""),classresult$tt )
+  write.table(classresult$tt, paste("TargetTable",Class[z], (".txt"), sep=""), sep="\t",row.names=FALSE)
+  write.table(classresult$resultnn, paste("Result_NN",Class[z], (".txt"), sep=""), sep="\t",row.names=FALSE)
+#   write.table(classresult$tt, paste("TargetTable",Class[z], (".txt")), sep="\t",row.names=FALSE)
+#   write.table(classresult$resultnn, paste("Result_NN",Class[z], (".txt")), sep="\t",row.names=FALSE)
 }
 
 
 # save(Target_baseanalysis_Jan0910_table, file="C:/Users/Kate Hyun/Dropbox/Kate/ReID/TruckReid/ProcessedData/Jan0910/Target_base_Jan0910.RData")
-write.table(Target_baseanalysis_Jan0910_table, "./Target_base_Jan0910.txt", sep="\t")
+options(scipen=999)
+write.table(Target_baseanalysis_Jan0910_table, "./Target_base_Jan0910.txt", sep="\t",row.names=FALSE)
+
 
 
 utils::View(Result_NN9)
+
